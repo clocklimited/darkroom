@@ -12,7 +12,7 @@ http://darkroom.io
 
 ## POST /resize
 
-Images will be resized and auto cropped if needed, omission of the width or height parameter will auto resize based on the aspect ratio of the source image.
+Images will be resized, omission of the width or height parameter will auto resize based on the aspect ratio of the source image.
 
 `src` - URL of image to manipulate.
 
@@ -56,5 +56,38 @@ This will preform an optimisation on image to the specified level, where 7 is th
 ### Response
 
     { "image": "http://darkroom.io/opt/2/100x200_image.png"
+    }
+
+# POST /crop
+
+This will preform a manual crop on image using the speicfied coordinates, for a width and height.
+
+`src` - URL of image to manipulate.
+
+`sizes` - An array of sizes to return, dimensions cannot be larger than the source image.
+
+`sizes.crops` - An object containing the coordinates of the crop to be made. Coorinates are relitive to the original image.
+
+### Request
+
+    { "src": "http://tomg.co/image.png"
+    , "sizes":
+      [ { w: 200
+        , h: 400
+        , crops:
+          { x1: 10
+          , x2: 100
+          , y1: 100
+          , y2: 100
+          }
+        }
+      , [100, 200] // auto cropped when resized
+      ]
+    }
+
+### Response
+
+    { "200x400": "http://darkroom.io/200x400_image.png"
+    , "100x200": "http://darkroom.io/100x200_image.png"
     }
 
