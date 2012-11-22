@@ -86,6 +86,8 @@ This will preform a manual crop on image using the speicfied coordinates, for a 
           , x2: 100
           , y1: 100
           , y2: 100
+          , w: 100 // relation to original image
+          , h: 200 // ""           ""
           }
         }
       , [100, 200] // auto cropped when resized
