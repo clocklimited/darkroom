@@ -9,10 +9,11 @@
 , "dependencies":
   { "con.figure": "~0.0.0"
   , "resize": "~0.0.3"
-  , "restify": "~1.4.4"
   }
 , "devDependencies":
   { "darkroom-server":"*"
+  , "mocha":"*"
+  , "should":"*"
   }
 , "scripts":
   { "test": "mocha -r should test"
@@ -26,3 +27,4 @@
 , "license": "MIT"
 , "readmeFilename": "README.md"
 }
+
