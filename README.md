@@ -17,11 +17,13 @@ http://darkroom.io
 
 # API
 
-## POST /resize
+## Default response will be either an (301 to an image on a cdn / JSON object pointing to a resource)
+
+## POST {imageurl}/resize
 
 Images will be resized, omission of the width or height parameter will auto resize based on the aspect ratio of the source image.
 
-`src` - URL of image to manipulate.
+`src` - URL of image to manipulate, or send as multipart form data.
 
 `sizes` - An array of sizes to return, dimensions cannot be larger than the source image.
 
@@ -44,15 +46,19 @@ Images will be resized, omission of the width or height parameter will auto resi
     , "50": "http://darkroom.io/50_image.png"
     }
 
-# POST /optimise
-or
-# POST /optimize
+### GET {imageurl}/resize/{width}(/{height})
 
-This will preform an optimisation on image to the specified level, where 7 is the most aggressive, but increases reponse time.
+With height being optional. This will return a (301 to an image / link to a CDN hosted version in a JSON structure)
 
-`src` - URL of image to manipulate.
+## GET {imageurl}/
 
-`level` - Optimisation level (0-7), default of 2.
+This returns with a default optimisation to an image at a specified level from 0-7, 4 being a default and 10 is the most aggressive however more likley to cause artifacts.
+
+Optimisation level (0-10), default of 4.
+
+## GET {imageurl}/original
+
+Returns the original image
 
 ### Request
 
@@ -65,11 +71,9 @@ This will preform an optimisation on image to the specified level, where 7 is th
     { "image": "http://darkroom.io/opt/2/100x200_image.png"
     }
 
-# POST /crop
+## POST {imageurl}/crop
 
 This will preform a manual crop on image using the speicfied coordinates, for a width and height.
-
-`src` - URL of image to manipulate.
 
 `sizes` - An array of sizes to return, dimensions cannot be larger than the source image.
 
@@ -100,3 +104,6 @@ This will preform a manual crop on image using the speicfied coordinates, for a 
     , "100x200": "http://darkroom.io/100x200_image.png"
     }
 
+## GET /
+
+Darkroom.io site.
