@@ -19,7 +19,7 @@ http://darkroom.io
 
 ## Default response will be either an (301 to an image on a cdn / JSON object pointing to a resource)
 
-## POST {imageurl}/resize
+## POST /resize/{imageurl}
 
 Images will be resized, omission of the width or height parameter will auto resize based on the aspect ratio of the source image.
 
@@ -46,17 +46,22 @@ Images will be resized, omission of the width or height parameter will auto resi
     , "50": "http://darkroom.io/50_image.png"
     }
 
-### GET {imageurl}/resize/{width}(/{height})
+### GET /resize/{width}/{height}/{imageurl}
+or
+### GET /resize/{width}/{imageurl}
 
 With height being optional. This will return a (301 to an image / link to a CDN hosted version in a JSON structure)
 
-## GET {imageurl}/
+## GET /{imageurl}
+or
+## GET /optimise/10/{imageurl}
+## GET /optimize/10/{imageurl}
 
 This returns with a default optimisation to an image at a specified level from 0-7, 4 being a default and 10 is the most aggressive however more likley to cause artifacts.
 
 Optimisation level (0-10), default of 4.
 
-## GET {imageurl}/original
+## GET /original/{imageurl}
 
 Returns the original image
 
@@ -71,7 +76,7 @@ Returns the original image
     { "image": "http://darkroom.io/opt/2/100x200_image.png"
     }
 
-## POST {imageurl}/crop
+## POST /crop/{imageurl}
 
 This will preform a manual crop on image using the speicfied coordinates, for a width and height.
 
