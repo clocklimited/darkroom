@@ -17,17 +17,32 @@ http://darkroom.io
 
 # API
 
-## Default response will be either an (301 to an image on a cdn / JSON object pointing to a resource)
+## Default response will be either an (301 to an image / JSON object pointing to a resource)
+
+## POST /
+
+Creates an image on Darkroom.
+
+### Body
+
+`src` - URL of image to manipulate, or send as multipart form data.
+
+    { "src": "http://tomg.co/image.png" }
+
+### Response
+
+    { "image": "http://darkroom.io/randomstring" }
 
 ## POST /resize/{imageurl}
 
 Images will be resized, omission of the width or height parameter will auto resize based on the aspect ratio of the source image.
 
+
+### Body
+
 `src` - URL of image to manipulate, or send as multipart form data.
 
 `sizes` - An array of sizes to return, dimensions cannot be larger than the source image.
-
-### Body
 
     { "src": "http://tomg.co/image.png"
     , "sizes":
