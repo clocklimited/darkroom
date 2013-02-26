@@ -4,7 +4,7 @@ darkroom
 An image manipulation service.
 
 
-Authentication between services and client will be achived by using Oauth. This will allow each request to be tied to a specific user account allowing per client granularity.
+Authentication between services and client will be achieved by using Oauth. This will allow each request to be tied to a specific user account allowing per client granularity.
 
 # Installation
 ## Mac OS X 10.8
@@ -72,7 +72,7 @@ or
 ## GET /optimise/10/{imageurl}
 ## GET /optimize/10/{imageurl}
 
-This returns with a default optimisation to an image at a specified level from 0-7, 4 being a default and 10 is the most aggressive however more likley to cause artifacts.
+This returns with a default optimisation to an image at a specified level from 0-7, 4 being a default and 10 is the most aggressive however more likely to cause artefacts.
 
 Optimisation level (0-10), default of 4.
 
@@ -93,11 +93,11 @@ Returns the original image
 
 ## POST /crop/{imageurl}
 
-This will preform a manual crop on image using the speicfied coordinates, for a width and height.
+This will preform a manual crop on image using the specified coordinates, for a width and height.
 
 `sizes` - An array of sizes to return, dimensions cannot be larger than the source image.
 
-`sizes.crops` - An object containing the coordinates of the crop to be made. Coorinates are relitive to the original image.
+`sizes.crops` - An object containing the coordinates of the crop to be made. Coordinates are relative to the original image.
 
 ### Request
 
