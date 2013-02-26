@@ -14,6 +14,7 @@
   { "darkroom-server":"*"
   , "mocha":"*"
   , "should":"*"
+  , "request": "~2.14.0"
   }
 , "scripts":
   { "test": "mocha -r should test"
