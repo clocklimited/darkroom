@@ -2,6 +2,7 @@ var Resize = require('../lib/resize')
   , streamToTest = require('./stream.fixture.js')
   , fs = require('fs')
   , join = require('path').join
+  , temp = require('temp')
   , resize
 
 describe('Resize', function() {
@@ -37,9 +38,10 @@ describe('Resize', function() {
     readStream.pipe(resize).pipe(writeStream)
 
     writeStream.on('close', function() {
-      fs.readFile(join(__dirname, 'fixtures', 'little-bill.png'), function (err, data) {
+      fs.readFile(join(__dirname, 'fixtures', 'little-bill.png'), function (err) {
         if (err) throw err
-        data.should.have.lengthOf(57901)
+        resize.size.should.equal(57901)
+        temp.cleanup()
         done()
       })
     })

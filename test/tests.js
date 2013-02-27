@@ -19,7 +19,7 @@ function addFile(filepath) {
   }
   return
 }
-mocha.reporter('spec').ui('bdd').timeout(0)
+mocha.reporter('spec').ui('bdd')
 
 // addFile(join(__dirname, 'darkroomStream.test.js'))
 addFile(join(__dirname, 'resize.test.js'))
