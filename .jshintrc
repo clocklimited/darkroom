@@ -2,7 +2,7 @@
   "asi": true,
   "boss": true,
   "browser": true,
-  "curly": true,
+  "curly": false,
   "devel": true,
   "maxdepth": 4,
   "maxstatements": 25,
