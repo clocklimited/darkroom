@@ -1,31 +1,31 @@
-{ "name": "darkroom"
-, "private": true
-, "version": "0.0.0"
-, "description": "Darkroom API for image manipulation"
-, "main": "server.js"
-, "directories":
-  { "test": "test"
-  }
-, "dependencies":
-  { "con.figure": "~0.0.0"
-  , "resize": "~0.0.3"
-  }
-, "devDependencies":
-  { "darkroom-server":"*"
-  , "mocha":"*"
-  , "should":"*"
-  , "request": "~2.14.0"
-  }
-, "scripts":
-  { "test": "mocha -r should test"
-  , "start": "node server.js"
-  }
-, "repository":
-  { "type": "git"
-  , "url": "git://github.com/tomgco/darkroom.git"
-  }
-, "author": ""
-, "license": "MIT"
-, "readmeFilename": "README.md"
+{
+  "name": "darkroom",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Darkroom API for image manipulation",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "con.figure": "~0.0.0",
+    "resize": "~0.0.3",
+    "canvas": "~1.0.1",
+    "readable-stream": "~0.3.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.8.1",
+    "should": "*"
+  },
+  "scripts": {
+    "test": "mocha -r should test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tomgco/darkroom.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "readmeFilename": "README.md"
 }
-
