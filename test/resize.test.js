@@ -1,0 +1,62 @@
+var Resize = require('../lib/resize')
+  , streamToTest = require('./stream.fixture.js')
+  , fs = require('fs')
+  , join = require('path').join
+  , resize
+
+describe('Resize', function() {
+
+  beforeEach(function() {
+    resize = new Resize()
+  })
+
+  describe('Inherit from DarkroomStream', function () {
+    it('should have a pipe method', function () {
+      resize.should.be.a('object').and.have.property('pipe')
+    })
+
+    it('should have a write method', function () {
+      resize.should.be.a('object').and.have.property('write')
+    })
+
+    it('should shouldn\'t have a pause method', function () {
+      resize.should.be.a('object').and.not.have.property('pause')
+    })
+  })
+
+  it('should read in an image using streams', function () {
+    resize.chunks.should.have.lengthOf(0)
+    // streamToTest(resize)
+  })
+
+  it('should return an image as a DataUri', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
+      , writeStream = fs.createWriteStream(join(__dirname, 'fixtures', 'little-bill.png'))
+    readStream.pipe(resize).pipe(writeStream)
+
+    setTimeout(function () {
+      fs.readFile(join(__dirname, 'fixtures', 'little-bill.png'), function (err, data) {
+        if (err) throw err
+        data.should.have.lengthOf(57901)
+        done()
+      })
+    }, 500)
+    // process.nextTick(function() {
+    //   // resize.pipe(writeStream)
+    // })
+
+    // resize.on('data', function(data) {
+    //   console.log(data)
+    // })
+
+    // resize.on('end', function() {
+    //   console.log('done')
+    //   done()
+    // })
+
+    // resize.on('error', function (err) {
+    //   should.not.exist(err)
+    // })
+  })
+})

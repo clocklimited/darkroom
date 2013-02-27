@@ -22,7 +22,8 @@ function addFile(filepath) {
 
 mocha.reporter('spec').ui('bdd');
 
-addFile(join(__dirname, 'resize.integration.test.js'))
+// addFile(join(__dirname, 'darkroomStream.test.js'))
+addFile(join(__dirname, 'resize.test.js'))
 
 var runner = mocha.run(function () {
   console.log('Finished', counts)
