@@ -33,30 +33,15 @@ describe('Resize', function() {
     resize.chunks.should.have.lengthOf(0)
     var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
       , writeStream = fs.createWriteStream(join(__dirname, 'fixtures', 'little-bill.png'))
+
     readStream.pipe(resize).pipe(writeStream)
 
-    setTimeout(function () {
+    writeStream.on('close', function() {
       fs.readFile(join(__dirname, 'fixtures', 'little-bill.png'), function (err, data) {
         if (err) throw err
         data.should.have.lengthOf(57901)
         done()
       })
-    }, 500)
-    // process.nextTick(function() {
-    //   // resize.pipe(writeStream)
-    // })
-
-    // resize.on('data', function(data) {
-    //   console.log(data)
-    // })
-
-    // resize.on('end', function() {
-    //   console.log('done')
-    //   done()
-    // })
-
-    // resize.on('error', function (err) {
-    //   should.not.exist(err)
-    // })
+    })
   })
 })
