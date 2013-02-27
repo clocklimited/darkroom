@@ -1,7 +1,6 @@
 {
   "asi": true,
   "boss": true,
-  "browser": true,
   "curly": false,
   "devel": true,
   "maxdepth": 4,
