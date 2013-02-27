@@ -5,7 +5,7 @@ var Resize = require('../lib/resize')
   , temp = require('temp')
   , resize
 
-describe('Resize', function() {
+describe('ResizeStream', function() {
 
   beforeEach(function() {
     resize = new Resize()
@@ -27,10 +27,10 @@ describe('Resize', function() {
 
   it('should read in an image using streams', function () {
     resize.chunks.should.have.lengthOf(0)
-    // streamToTest(resize)
+    streamToTest(resize)
   })
 
-  it('should return an image as a DataUri', function (done) {
+  it('should return an image as a DataUri at 200x200', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
       , writeStream = fs.createWriteStream(join(__dirname, 'fixtures', 'little-bill.png'))
