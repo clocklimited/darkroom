@@ -2,7 +2,7 @@ var Resize = require('../lib/resize')
   , streamToTest = require('./stream.fixture.js')
   , fs = require('fs')
   , join = require('path').join
-  , temp = require('temp')
+  , tmp = join(__dirname, 'fixtures', 'temp')
   , resize
 
 describe('ResizeStream', function() {
@@ -33,15 +33,14 @@ describe('ResizeStream', function() {
   it('should return an image as a DataUri at 200x200', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
-      , writeStream = fs.createWriteStream(join(__dirname, 'fixtures', 'little-bill.png'))
+      , writeStream = fs.createWriteStream(join(tmp, 'little-bill.png'))
 
     readStream.pipe(resize).pipe(writeStream)
 
     writeStream.on('close', function() {
-      fs.readFile(join(__dirname, 'fixtures', 'little-bill.png'), function (err) {
+      fs.readFile(join(tmp, 'little-bill.png'), function (err, data) {
         if (err) throw err
-        resize.size.should.equal(57901)
-        temp.cleanup()
+        data.length.should.equal(51372)
         done()
       })
     })
