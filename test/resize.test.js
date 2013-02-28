@@ -50,6 +50,27 @@ describe('ResizeStream', function() {
     })
   })
 
+  it('should return an image with the dimensions of 77x12', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '77x12.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 77
+      , height: 12
+      }
+    )
+
+    writeStream.on('close', function() {
+      fs.readFile(filepath, function (err, data) {
+        if (err) throw err
+        data.length.should.equal(26258)
+        done()
+      })
+    })
+  })
+
   it('should return an image with the dimensions of 100x200', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '100x200.png')
