@@ -21,7 +21,6 @@
   "nonew": true,
   "predef":
   [
-    "async",
     "Firmin",
     "after",
     "afterEach",
@@ -32,10 +31,6 @@
     "Ext",
     "io",
     "it",
-    "unescape",
-    "Munchkin",
-    "mktoMunchkinFunction",
-    "_",
     "emit"
   ],
   "quotmark": "single",
