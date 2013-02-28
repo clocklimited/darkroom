@@ -30,17 +30,42 @@ describe('ResizeStream', function() {
     streamToTest(resize)
   })
 
-  it('should return an image as a DataUri at 200x200', function (done) {
+  it('should return an image with a known length', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
       , writeStream = fs.createWriteStream(join(tmp, 'little-bill.png'))
 
-    readStream.pipe(resize).pipe(writeStream)
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 200
+      , height: 200
+      }
+    )
 
     writeStream.on('close', function() {
       fs.readFile(join(tmp, 'little-bill.png'), function (err, data) {
         if (err) throw err
         data.length.should.equal(51372)
+        done()
+      })
+    })
+  })
+
+  it('should return an image with the dimensions of 100x200', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '100x200.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 100
+      , height: 200
+      }
+    )
+
+    writeStream.on('close', function() {
+      fs.readFile(filepath, function (err, data) {
+        if (err) throw err
+        data.length.should.equal(26258)
         done()
       })
     })

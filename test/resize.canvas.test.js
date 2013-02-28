@@ -26,6 +26,7 @@ var dataProvider =
   , [-100, 0]
   , [0, -100]
   , [0, 100]
+  // , [100, 1000] How to implement this case without causing crazy code?
   ]
 
 describe('ResizeCanvas', function() {
@@ -80,7 +81,7 @@ describe('ResizeCanvas', function() {
               + originalImage.width)
           } else {
             assert.strictEqual(img.height, Math.abs(item[1]), JSON.stringify(item)
-              + ' value ' + img.height + ' does not match expected new width of'
+              + ' value ' + img.height + ' does not match expected new width of '
               + Math.abs(item[1]))
           }
           return callback()
