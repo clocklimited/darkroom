@@ -51,7 +51,7 @@ describe('ResizeCanvas', function() {
     async.each(dataProvider, function(item, callback) {
       var originalImage = new Image()
         , canvas = new Canvas(item[0], item[1])
-        , render = resizeCanvas(imageFixture, new Image(), canvas)
+        , render = resizeCanvas(imageFixture, new Image(), canvas, true)
 
       render.onerror = function (error) {
         return callback(error)

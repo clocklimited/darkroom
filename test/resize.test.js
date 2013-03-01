@@ -65,7 +65,7 @@ describe('ResizeStream', function() {
     writeStream.on('close', function() {
       fs.readFile(filepath, function (err, data) {
         if (err) throw err
-        data.length.should.equal(26258)
+        data.length.should.equal(2305)
         done()
       })
     })
