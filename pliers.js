@@ -1,7 +1,6 @@
 module.exports = tasks
 
 var join = require('path').join
-  , child
 
 // Growl is only for Mac users
 try {
@@ -57,26 +56,6 @@ function tasks(pliers) {
 
   pliers('test', function (done) {
     pliers.exec('node test/tests.js', done)
-  })
-
-  pliers('start', function (done) {
-    if (child) child.kill()
-    child = pliers.exec('node app')
-    done()
-  })
-
-  pliers('watch', function () {
-
-    pliers.logger.info('Watching for application JavaScript changes')
-    pliers.watch(pliers.filesets.serverJs, function () {
-      pliers.run('start', function () {
-        pliers.logger.info('Restarting server…')
-        notify('Server restarted')
-      })
-    })
-
-    pliers.run('start')
-
   })
 
 }
