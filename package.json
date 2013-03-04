@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "description": "Darkroom API for image manipulation",
   "main": "server.js",
+  "cairo": "1.12.2",
   "directories": {
     "test": "test"
   },

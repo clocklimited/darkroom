@@ -21,6 +21,7 @@ function addFile(filepath) {
 }
 mocha.reporter('spec').ui('bdd')
 
+addFile(join(__dirname, 'cairo.version.test.js'))
 addFile(join(__dirname, 'resize.canvas.test.js'))
 addFile(join(__dirname, 'darkroomStream.test.js'))
 addFile(join(__dirname, 'resize.test.js'))
