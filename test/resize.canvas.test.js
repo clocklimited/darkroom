@@ -1,4 +1,4 @@
-var resizeCanvas = require('../lib/canvas/resize')
+var ResizeCanvas = require('../lib/canvas/resize')
   , fs = require('fs')
   , Canvas = require('canvas')
   , mkdirp = require('mkdirp')
@@ -33,14 +33,19 @@ describe('ResizeCanvas', function() {
 
   it('should treat negative numbers as positive', function (done) {
     var canvas = new Canvas(-100, -100)
-      , render = resizeCanvas(imageFixture, new Image(), canvas)
+      , image = new ResizeCanvas()
 
-    assert(canvas.height > 0, 'Is not a possitive number')
-    assert(canvas.width > 0, 'Is not a possitive number')
-
-    render.onerror = function (error) {
+    image.onerror = function (error) {
       return done(error)
     }
+
+    image.onload = function (canvas) {
+      assert(canvas.height > 0, 'Is not a possitive number')
+      assert(canvas.width > 0, 'Is not a possitive number')
+    }
+
+    image.resize(imageFixture, new Image(), canvas)
+
     done()
   })
 
@@ -51,11 +56,13 @@ describe('ResizeCanvas', function() {
     async.each(dataProvider, function(item, callback) {
       var originalImage = new Image()
         , canvas = new Canvas(item[0], item[1])
-        , render = resizeCanvas(imageFixture, new Image(), canvas, true)
+        , image = new ResizeCanvas()
 
-      render.onerror = function (error) {
+      image.onerror = function (error) {
         return callback(error)
       }
+
+      image.resize(imageFixture, new Image(), canvas, true)
 
       originalImage.onload = function () {
         var img = new Image()
