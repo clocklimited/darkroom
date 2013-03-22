@@ -1,4 +1,4 @@
-var Crop = require('../lib/crop')
+var Crop = require('../lib/cropper')
   , streamToTest = require('./stream.fixture.js')
   , fs = require('fs')
   , join = require('path').join
@@ -33,10 +33,12 @@ describe('CropStream', function() {
   it('should return an image with a known length', function (done) {
     crop.chunks.should.have.lengthOf(0)
     var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
-      , writeStream = fs.createWriteStream(join(tmp, 'little-bill.png'))
+      , writeStream = fs.createWriteStream(join(tmp, 'little-bill-crop.png'))
 
     readStream.pipe(crop).pipe(writeStream
-    , { width: 200
+    , { xOffset: 10
+      , yOffset: 10
+      , width: 100
       , height: 200
       }
     )
@@ -54,12 +56,14 @@ describe('CropStream', function() {
 
   it('should return an image with the dimensions of 100x200', function (done) {
     crop.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '100x200.png')
+    var filepath = join(tmp, '100x200-crop.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(crop).pipe(writeStream
-    , { width: 100
+    , { xOffset: 40
+      , yOffset: 20
+      , width: 100
       , height: 200
       }
     )
@@ -69,7 +73,7 @@ describe('CropStream', function() {
         if (err) {
           throw err
         }
-        data.length.should.equal(26258)
+        data.length.should.equal(10572)
         done()
       })
     })
