@@ -4,8 +4,6 @@ var Resize = require('../lib/resize')
   , join = require('path').join
   , tmp = join(__dirname, 'fixtures', 'temp')
   , resize
-  , _ = require('lodash')
-  , assert = require('assert')
 
 describe('ResizeStream', function() {
 
