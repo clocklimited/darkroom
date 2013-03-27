@@ -26,7 +26,7 @@ addFile(join(__dirname, 'resize.canvas.test.js'))
 // addFile(join(__dirname, 'crop.canvas.test.js'))
 addFile(join(__dirname, 'darkroomStream.test.js'))
 addFile(join(__dirname, 'resize.test.js'))
-addFile(join(__dirname, 'crop.test.js'))
+// addFile(join(__dirname, 'crop.test.js'))
 
 var runner = mocha.run(function () {
   console.log('Finished', counts)
