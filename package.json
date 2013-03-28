@@ -12,7 +12,8 @@
     "con.figure": "~0.0.0",
     "resize": "~0.0.3",
     "canvas": "~1.0.1",
-    "readable-stream": "~0.3.1"
+    "readable-stream": "~0.3.1",
+    "gm": "~1.8.2"
   },
   "devDependencies": {
     "mocha": "~1.8.1",
