@@ -9,6 +9,5 @@ Authentication between services and client will be achieved by using Oauth. This
 # Installation
 ## Mac OS X 10.8
     Install X11 from here: http://xquartz.macosforge.org/
-    brew install cairo
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
+    brew install gm
     npm install
