@@ -17,6 +17,7 @@
     "lodash": "~1.2.0"
   },
   "devDependencies": {
+    "pliers": "*",
     "mocha": "~1.8.1",
     "should": "*",
     "temp": "~0.5.0",
