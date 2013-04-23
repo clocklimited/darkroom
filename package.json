@@ -11,7 +11,6 @@
   "dependencies": {
     "con.figure": "~0.0.0",
     "resize": "~0.0.3",
-    "canvas": "~1.0.1",
     "readable-stream": "~0.3.1",
     "gm": "~1.8.2",
     "lodash": "~1.2.0"
@@ -26,7 +25,7 @@
     "async": "~0.2.5"
   },
   "scripts": {
-    "test": "mocha -r should test",
+    "test": "node ./node_modules/pliers/pliers-cli.js test",
     "start": "node server.js"
   },
   "repository": {
