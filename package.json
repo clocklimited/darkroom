@@ -12,7 +12,7 @@
     "con.figure": "~0.0.0",
     "resize": "~0.0.3",
     "readable-stream": "~0.3.1",
-    "gm": "~1.8.2",
+    "gm": "~1.9",
     "lodash": "~1.2.0"
   },
   "devDependencies": {
