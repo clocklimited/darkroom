@@ -4,13 +4,11 @@
   "version": "0.0.0",
   "description": "Darkroom API for image manipulation",
   "main": "server.js",
-  "cairo": "1.12.2",
   "directories": {
     "test": "test"
   },
   "dependencies": {
     "con.figure": "~0.0.0",
-    "resize": "~0.0.3",
     "readable-stream": "~0.3.1",
     "gm": "~1.9",
     "lodash": "~1.2.0"
