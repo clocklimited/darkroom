@@ -10,7 +10,7 @@
   "dependencies": {
     "con.figure": "~0.0.0",
     "readable-stream": "~0.3.1",
-    "gm": "~1.9",
+    "gm": "1.9.1",
     "lodash": "~1.2.0"
   },
   "devDependencies": {
