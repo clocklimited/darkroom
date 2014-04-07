@@ -9,19 +9,10 @@
     "test": "test"
   },
   "dependencies": {
-    "con.figure": "~0.0.0",
-    "resize": "~0.0.3",
-    "canvas": "~1.0.1",
-    "readable-stream": "~0.3.1",
-    "gm": "~1.8.2"
+    "con.figure": "^0.0.0",
+    "gm": "^1.14.2"
   },
   "devDependencies": {
-    "mocha": "~1.8.1",
-    "should": "*",
-    "temp": "~0.5.0",
-    "mkdirp": "~0.3.5",
-    "lodash": "~1.0.1",
-    "async": "~0.2.5"
   },
   "scripts": {
     "test": "mocha -r should test",
