@@ -1,11 +1,13 @@
 {
   "name": "darkroom",
-  "private": true,
   "version": "1.0.0",
   "description": "Darkroom API for image manipulation",
   "main": "server.js",
   "directories": {
     "test": "test"
+  },
+  "publishConfig": {
+    "registry": "http://npm.clockte.ch/"
   },
   "dependencies": {
     "con.figure": "^0.0.0",
