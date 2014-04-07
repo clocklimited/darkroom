@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "description": "Darkroom API for image manipulation",
   "main": "server.js",
-  "cairo": "1.12.2",
   "directories": {
     "test": "test"
   },
@@ -13,9 +12,15 @@
     "gm": "^1.14.2"
   },
   "devDependencies": {
+    "pliers": "*",
+    "mocha": "~1.8.1",
+    "should": "*",
+    "temp": "~0.5.0",
+    "mkdirp": "~0.3.5",
+    "async": "~0.2.5"
   },
   "scripts": {
-    "test": "mocha -r should test",
+    "test": "node ./node_modules/pliers/pliers-cli.js test",
     "start": "node server.js"
   },
   "repository": {
