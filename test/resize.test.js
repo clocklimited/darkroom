@@ -44,7 +44,7 @@ describe('ResizeStream', function() {
     writeStream.on('close', function() {
       fs.readFile(join(tmp, 'little-bill.png'), function (err, data) {
         if (err) throw err
-        data.length.should.equal(51372)
+        data.length.should.be.above(100)
         done()
       })
     })
@@ -65,28 +65,29 @@ describe('ResizeStream', function() {
     writeStream.on('close', function() {
       fs.readFile(filepath, function (err, data) {
         if (err) throw err
-        data.length.should.equal(26258)
+        data.length.should.be.above(100)
         done()
       })
     })
   })
 
-  it('should return an image with the dimensions of 100x200', function (done) {
+  it('Corrupted image should trigger error', function (done) {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '100x200.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
+    var filepath = join(tmp, 'broken-image.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
-    , { width: 100
-      , height: 200
+      , { width: 100
+        , height: 200
       }
     )
 
-    writeStream.on('close', function() {
+    resize.on('error', function() {
       fs.readFile(filepath, function (err, data) {
-        if (err) throw err
-        data.length.should.equal(26258)
+        if (err) {
+          throw err
+        }
         done()
       })
     })
