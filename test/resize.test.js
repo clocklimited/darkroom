@@ -13,15 +13,15 @@ describe('ResizeStream', function() {
 
   describe('Inherit from DarkroomStream', function () {
     it('should have a pipe method', function () {
-      resize.should.be.a('object').and.have.property('pipe')
+      resize.should.be.an.instanceOf(Object).and.have.property('pipe')
     })
 
     it('should have a write method', function () {
-      resize.should.be.a('object').and.have.property('write')
+      resize.should.be.an.instanceOf(Object).and.have.property('write')
     })
 
-    it('should shouldn\'t have a pause method', function () {
-      resize.should.be.a('object').and.not.have.property('pause')
+    it('shouldn’t have a pause method', function () {
+      resize.should.be.an.instanceOf(Object).and.not.have.property('pause')
     })
   })
 

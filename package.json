@@ -11,15 +11,15 @@
   },
   "dependencies": {
     "con.figure": "^0.0.0",
-    "gm": "git://github.com/microadam/gm.git#9fd5a1fa2eff8f43e9a3d4e24ef0c063dc4db270"
+    "gm": "^1.14.2",
+    "temp": "~0.8.0",
+    "async": "~0.2.5"
   },
   "devDependencies": {
     "pliers": "*",
     "mocha": "~1.8.1",
-    "should": "*",
-    "temp": "~0.5.0",
-    "mkdirp": "~0.3.5",
-    "async": "~0.2.5"
+    "should": "~4.0.4",
+    "mkdirpmkdirp": "~0.3.5"
   },
   "scripts": {
     "test": "node ./node_modules/pliers/pliers-cli.js test",
