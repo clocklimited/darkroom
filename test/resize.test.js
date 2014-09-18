@@ -16,7 +16,7 @@ describe('ResizeStream', function() {
   })
 
   after(function () {
-    //rimraf.sync(tmp)
+    rimraf.sync(tmp)
   })
 
   beforeEach(function() {
