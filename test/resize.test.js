@@ -4,8 +4,19 @@ var Resize = require('../lib/resize')
   , join = require('path').join
   , tmp = join(__dirname, 'fixtures', 'temp')
   , resize
+  , mkdirp = require('mkdirp')
+  , rimraf = require('rimraf')
 
 describe('ResizeStream', function() {
+
+  before(function () {
+    rimraf.sync(tmp)
+    mkdirp.sync(tmp)
+  })
+
+  after(function () {
+    rimraf.sync(tmp)
+  })
 
   beforeEach(function() {
     resize = new Resize()
@@ -13,15 +24,15 @@ describe('ResizeStream', function() {
 
   describe('Inherit from DarkroomStream', function () {
     it('should have a pipe method', function () {
-      resize.should.be.a('object').and.have.property('pipe')
+      resize.should.be.type('object').and.have.property('pipe')
     })
 
     it('should have a write method', function () {
-      resize.should.be.a('object').and.have.property('write')
+      resize.should.be.type('object').and.have.property('write')
     })
 
     it('should shouldn\'t have a pause method', function () {
-      resize.should.be.a('object').and.not.have.property('pause')
+      resize.should.be.type('object').and.not.have.property('pause')
     })
   })
 
