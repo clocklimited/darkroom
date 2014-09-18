@@ -6,6 +6,7 @@ var Resize = require('../lib/resize')
   , resize
   , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
+  , gm = require('gm')
 
 describe('ResizeStream', function() {
 
@@ -77,6 +78,27 @@ describe('ResizeStream', function() {
       fs.readFile(filepath, function (err, data) {
         if (err) throw err
         data.length.should.be.above(100)
+        done()
+      })
+    })
+  })
+
+  it.only('should return a progressive image ', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, 'progressive-test.jpg')
+      , input = join(__dirname, 'fixtures', 'bill.jpeg')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 100
+      , height: 200
+      }
+    )
+
+    writeStream.on('close', function() {
+      gm(filepath).identify(function (err, data) {
+        data.Interlace.should.equal('Line')
         done()
       })
     })
