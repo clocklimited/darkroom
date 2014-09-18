@@ -16,7 +16,7 @@ describe('ResizeStream', function() {
   })
 
   after(function () {
-    rimraf.sync(tmp)
+    //rimraf.sync(tmp)
   })
 
   beforeEach(function() {
@@ -83,11 +83,11 @@ describe('ResizeStream', function() {
     })
   })
 
-  it.only('should return a progressive image ', function (done) {
+  it('should return a progressive image ', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, 'progressive-test.jpg')
-      , input = join(__dirname, 'fixtures', 'bill.jpeg')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
+      , inputfile = join(__dirname, 'fixtures', 'bill-non-progressive.jpeg')
+      , readStream = fs.createReadStream(inputfile)
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
@@ -99,6 +99,27 @@ describe('ResizeStream', function() {
     writeStream.on('close', function() {
       gm(filepath).identify(function (err, data) {
         data.Interlace.should.equal('Line')
+        done()
+      })
+    })
+  })
+
+  it.only('should return a image of the same type as the input ', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, 'iampng')
+      , inputfile = join(__dirname, 'fixtures', 'bill.png')
+      , readStream = fs.createReadStream(inputfile)
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 100
+      , height: 200
+      }
+    )
+
+    writeStream.on('close', function() {
+      gm(filepath).identify(function (err, data) {
+        data.format.should.equal('PNG')
         done()
       })
     })
