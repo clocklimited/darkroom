@@ -104,7 +104,7 @@ describe('ResizeStream', function() {
     })
   })
 
-  it.only('should return a image of the same type as the input ', function (done) {
+  it('should return a image of the same type as the input ', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, 'iampng')
       , inputfile = join(__dirname, 'fixtures', 'bill.png')
