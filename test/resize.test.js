@@ -16,7 +16,7 @@ describe('ResizeStream', function() {
   })
 
   after(function () {
-    rimraf.sync(tmp)
+   // rimraf.sync(tmp)
   })
 
   beforeEach(function() {
@@ -62,7 +62,49 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('should return an image with the dimensions of 100x200', function (done) {
+  it('should return an image with the dimensions of 100x50', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '100x50.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 100
+      , height: 50
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(100)
+        data.size.height.should.equal(50)
+        done()
+      })
+    })
+  })
+
+  it('should resize to bigger on than original width', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '600x100.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 600
+      , height: 100
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(600)
+        data.size.height.should.equal(100)
+        done()
+      })
+    })
+  })
+
+  it('should resize to bigger on than original height', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '100x200.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
@@ -75,9 +117,49 @@ describe('ResizeStream', function() {
     )
 
     writeStream.on('close', function() {
-      fs.readFile(filepath, function (err, data) {
-        if (err) throw err
-        data.length.should.be.above(100)
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(100)
+        data.size.height.should.equal(200)
+        done()
+      })
+    })
+  })
+
+  it('should return image 100x80 keeping ratio on 500x399 image', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '100x80.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 100
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(100)
+        data.size.height.should.equal(80)
+        done()
+      })
+    })
+  })
+
+  it('should not be able to resize bigger then original', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '600x500.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 600
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(500)
+        data.size.height.should.equal(399)
         done()
       })
     })
@@ -138,7 +220,7 @@ describe('ResizeStream', function() {
     )
 
     resize.on('error', function() {
-      fs.readFile(filepath, function (err, data) {
+      fs.readFile(filepath, function (err) {
         if (err) {
           throw err
         }
