@@ -8,7 +8,7 @@
   "dependencies": {
     "async": "~0.2.5",
     "con.figure": "^0.0.0",
-    "gm": "git://github.com/microadam/gm.git#9fd5a1fa2eff8f43e9a3d4e24ef0c063dc4db270",
+    "gm": "^1.17.0",
     "temp": "^0.8.1"
   },
   "devDependencies": {
@@ -24,6 +24,6 @@
     "type": "git",
     "url": "git://github.com/clocklimited/darkroom.git"
   },
-  "author": "Tom Gallacher",
+  "author": [ "Paul Serby", "Kuba Stawiarski" ],
   "license": "New BSD"
 }
