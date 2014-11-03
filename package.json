@@ -1,6 +1,6 @@
 {
   "name": "darkroom",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Darkroom API for image manipulation",
   "publishConfig": {
     "registry": "http://npm.clockte.ch/"
