@@ -83,28 +83,7 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('should resize to bigger on than original width', function (done) {
-    resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '600x100.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
-      , writeStream = fs.createWriteStream(filepath)
-
-    readStream.pipe(resize).pipe(writeStream
-    , { width: 600
-      , height: 100
-      }
-    )
-
-    writeStream.on('close', function() {
-       gm(filepath).identify(function (err, data) {
-        data.size.width.should.equal(600)
-        data.size.height.should.equal(100)
-        done()
-      })
-    })
-  })
-
-  it('should resize to bigger on than original height', function (done) {
+  it('should scale down if source is bigger than required height', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '100x200.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
@@ -125,7 +104,28 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('should return image 100x80 keeping ratio on 500x399 image', function (done) {
+  it('should scale up if source is smaller than required height', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '600x200.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.png'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 600
+      , height: 200
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(600)
+        data.size.height.should.equal(200)
+        done()
+      })
+    })
+  })
+
+  it('should keep ratio on 500x399 image when only resizing by width', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '100x80.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
@@ -145,7 +145,7 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('should not be able to resize bigger then original', function (done) {
+  it('should not resize to bigger than original with only one requested dimension', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '600x500.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'bill.jpeg'))
