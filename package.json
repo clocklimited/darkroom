@@ -6,8 +6,7 @@
     "registry": "http://npm.clockte.ch/"
   },
   "dependencies": {
-    "async": "~0.2.5",
-    "con.figure": "^0.0.0",
+    "async": "^0.9.0",
     "gm": "^1.17.0",
     "temp": "^0.8.1"
   },
