@@ -1,4 +1,4 @@
-var darkroomStream = require('../lib/darkroomStream')()
+var darkroomStream = require('../lib/darkroom-stream')()
 , streamToTest = require('./stream.fixture.js')
 
 describe('DarkroomStream', function () {
