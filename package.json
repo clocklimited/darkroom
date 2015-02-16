@@ -2,12 +2,17 @@
   "name": "darkroom",
   "version": "2.1.0",
   "description": "Darkroom API for image manipulation",
+  "main": "darkroom.js",
   "publishConfig": {
     "registry": "http://npm.clockte.ch/"
   },
   "dependencies": {
     "async": "^0.9.0",
     "gm": "^1.17.0",
+    "mkdirp": "^0.5.0",
+    "mocha": "^2.1.0",
+    "rimraf": "^2.2.8",
+    "should": "^5.0.0",
     "temp": "^0.8.1"
   },
   "devDependencies": {
