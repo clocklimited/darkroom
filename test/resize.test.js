@@ -45,7 +45,7 @@ describe('ResizeStream', function() {
   it('should return an image with a known length', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filePath = join(tmp, 'small-stretch.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.png'))
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
       , writeStream = fs.createWriteStream(filePath)
 
     readStream.pipe(resize).pipe(writeStream
@@ -89,7 +89,7 @@ describe('ResizeStream', function() {
   it('should stretch down if source is bigger than required height', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '100x200-stretch.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.png'))
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
@@ -111,7 +111,7 @@ describe('ResizeStream', function() {
   it('should scale up if source is smaller than required height', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, '600x200-scaleup-stretch.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.png'))
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
@@ -132,13 +132,13 @@ describe('ResizeStream', function() {
 
   it('should keep ratio on 500x399 image when only resizing by width', function (done) {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '100x80-bestfit-width.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.png'))
+    var filepath = join(tmp, '100x-fit-landscape.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
     , { width: 100
-      , mode: 'bestfit'
+      , mode: 'fit'
       }
     )
 
@@ -153,13 +153,13 @@ describe('ResizeStream', function() {
 
   it('should keep ratio on 500x399 image when only resizing by height', function (done) {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '125x100-bestfit-height.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.png'))
+    var filepath = join(tmp, 'x100-fit-landscape.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
     , { height: 100
-      , mode: 'bestfit'
+      , mode: 'fit'
       }
     )
 
@@ -174,14 +174,14 @@ describe('ResizeStream', function() {
 
   it('should keep ratio for landscape and constrain to 100x100', function (done) {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '100x100-bestfit-landscape-width-and-height.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.png'))
+    var filepath = join(tmp, '100x100-fit-landscape-width-and-height.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
     , { height: 100
       , width: 100
-      , mode: 'bestfit'
+      , mode: 'fit'
       }
     )
 
@@ -196,14 +196,14 @@ describe('ResizeStream', function() {
 
   it('should keep ratio for portrait and constrain to 100x100', function (done) {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '100x100-bestfit-landscape-width-and-height.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '399x500.png'))
+    var filepath = join(tmp, '100x100-fit-portrait-width-and-height.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '399x500-24bit.png'))
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
     , { height: 100
       , width: 100
-      , mode: 'bestfit'
+      , mode: 'fit'
       }
     )
 
@@ -216,9 +216,76 @@ describe('ResizeStream', function() {
     })
   })
 
+  it('should correctly ‘cover’ with a landscape constrained to 100x100', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '100x100-cover-landscape-width-and-height.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.png'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { height: 100
+      , width: 100
+      , mode: 'cover'
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(100)
+        data.size.height.should.equal(100)
+        done()
+      })
+    })
+  })
+
+  it('should correctly ‘cover’ with a portrait constrained to 100x100', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '100x100-cover-portrait-width-and-height.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '399x500-24bit.png'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { height: 100
+      , width: 100
+      , mode: 'cover'
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(100)
+        data.size.height.should.equal(100)
+        done()
+      })
+    })
+  })
+
+
+  it('should correctly ‘cover’ with a landscape constrained to 100x100 with an 8bit png', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, '100x100-cover-landscape-8bit-width-and-height.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-8bit.png'))
+      , writeStream = fs.createWriteStream(filepath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { height: 100
+      , width: 100
+      , mode: 'cover'
+      }
+    )
+
+    writeStream.on('close', function() {
+       gm(filepath).identify(function (err, data) {
+        data.size.width.should.equal(100)
+        data.size.height.should.equal(100)
+        done()
+      })
+    })
+  })
+
   it('should error if stretch is attempted with only a width', function () {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, '100x80-should-error.png')
+    var filepath = join(tmp, '100x-should-error.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.jpeg'))
       , writeStream = fs.createWriteStream(filepath)
 
@@ -240,7 +307,7 @@ describe('ResizeStream', function() {
 
     readStream.pipe(resize).pipe(writeStream
     , { width: 600
-      , mode: 'bestfit'
+      , mode: 'fit'
       }
     )
 
@@ -277,7 +344,7 @@ describe('ResizeStream', function() {
   it('should return a image of the same type as the input ', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, 'iampng')
-      , inputfile = join(__dirname, 'fixtures', '500x399.png')
+      , inputfile = join(__dirname, 'fixtures', '500x399-24bit.png')
       , readStream = fs.createReadStream(inputfile)
       , writeStream = fs.createWriteStream(filepath)
 
