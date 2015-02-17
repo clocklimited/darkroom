@@ -1,6 +1,6 @@
 module.exports =
-  { resize: require('./lib/resize')
-  , info: require('./lib/info')
-  , cropper: require('./lib/cropper')
-  , watermark: require('./lib/watermark')
+  { Resize: require('./lib/resize')
+  , Info: require('./lib/info')
+  , Crop: require('./lib/crop')
+  , Watermark: require('./lib/watermark')
   }
