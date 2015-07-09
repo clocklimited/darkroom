@@ -7,5 +7,6 @@ describe('darkroom', function() {
     assert(darkroom.Info)
     assert(darkroom.Watermark)
     assert(darkroom.Resize)
+    assert(darkroom.Circle)
   })
 })
