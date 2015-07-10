@@ -10,6 +10,7 @@ var assert = require('assert')
   , gm = require('gm')
   , bufferEqual = require('buffer-equal')
   , imageType = require('image-type')
+  , max = require('lodash.max')
 
 Promise.promisifyAll(gm.prototype)
 
@@ -24,26 +25,28 @@ describe('CircleStream', function() {
     rimraf.sync(tmp)
   })
 
-  it('should throw if missing params', function () {
-    // jshint nonew: false
-    assert.throws(function () {
-      new CircleStream()
-    }, /x0 is required/)
+  it('should default circle dimensions as a best guess size', function (done) {
+    var circle = new CircleStream()
+      , out = join(tmp, 'bill-circle-test-guess-size.png')
+      , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+      , readStream = fs.createReadStream(input)
+      , writeStream = fs.createWriteStream(out)
 
-    assert.throws(function () {
-      new CircleStream({ x0: 100 })
-    }, /y0 is required/)
+    readStream.pipe(circle).pipe(writeStream)
 
-    assert.throws(function () {
-      new CircleStream({ x0: 100, y0: 100 })
-    }, /x1 is required/)
+    function getImageSize(img) {
+      return gm(img).sizeAsync()
+    }
 
-    assert.throws(function () {
-      new CircleStream({ x0: 100, y0: 100, x1: 100 })
-    }, /y1 is required/)
+    writeStream.on('close', function () {
+      getImageSize(input).then(function (size) {
+        assert.equal(circle.options.x0, size.width / 2)
+        assert.equal(circle.options.y0, size.height / 2)
+        assert.equal(circle.options.x1, size.width * 0.8)
+        assert.equal(circle.options.y1, size.height * 0.8)
+      }).then(done)
+    })
   })
-
-  it('should default dimensions as best guess sizes')
 
   it('should be a DarkroomStream', function () {
     var s = new CircleStream({ x0: 100, y0: 100, x1: 100, y1: 100 })
@@ -72,7 +75,7 @@ describe('CircleStream', function() {
   })
 
   it('should return with a circular image', function (done) {
-    var circle = new CircleStream({ x0: 100, y0: 100, x1: 100, y1: 100 })
+    var circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 })
       , out = join(tmp, 'bill-circle-test.png')
       , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
       , readStream = fs.createReadStream(input)
@@ -89,6 +92,62 @@ describe('CircleStream', function() {
       Promise.join(readImage(out), readImage(expectedOut)).spread(function (image1, image2) {
         assert.equal(bufferEqual(image1, image2), true, 'Output should be as expected')
       }).then(done)
+    })
+  })
+
+  it('should save as a jpg if background colour is given', function (done) {
+    var colour = '#0165FF'
+      , circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320, colour: colour })
+      , out = join(tmp, 'bill-circle-test.jpg')
+      , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+      , readStream = fs.createReadStream(input)
+      , writeStream = fs.createWriteStream(out)
+
+    readStream.pipe(circle).pipe(writeStream)
+
+    function assertFileType(file) {
+      return assert.equal(imageType(file).ext, 'jpg')
+    }
+
+    function getColour(line) {
+      return '#' + line.split('#')[1]
+    }
+
+    function countColours(counts, colour) {
+      if (counts[colour]) {
+        counts[colour].count += 1
+      } else {
+        counts[colour] = { colour: colour, count: 1 }
+      }
+      return counts
+    }
+
+    function assertMainImageColour(histogram) {
+      return fs.readFileAsync(histogram).then(function (file) {
+        var counts = file.toString().split('\n')
+          .map(getColour)
+          .reduce(countColours, {})
+
+        return assert.equal(max(counts, 'count').colour, colour)
+      })
+    }
+
+    function createImageHistogram() {
+      var histogramPath = join(tmp, 'histogram.txt')
+
+      return gm(out).command('convert')
+        .writeAsync(histogramPath)
+        .then(function () {
+          return assertMainImageColour(histogramPath)
+        })
+    }
+
+    writeStream.on('close', function () {
+      fs.readFileAsync(out)
+        .then(assertFileType)
+        .then(createImageHistogram)
+        .then(done)
+        .catch(done)
     })
   })
 })
