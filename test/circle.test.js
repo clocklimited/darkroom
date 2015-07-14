@@ -40,11 +40,13 @@ describe('CircleStream', function() {
 
     writeStream.on('close', function () {
       getImageSize(input).then(function (size) {
-        assert.equal(circle.options.x0, size.width / 2)
-        assert.equal(circle.options.y0, size.height / 2)
-        assert.equal(circle.options.x1, size.width * 0.8)
-        assert.equal(circle.options.y1, size.height * 0.8)
-      }).then(done)
+        assert.equal(circle.dimensions[0], size.width * 0.1)
+        assert.equal(circle.dimensions[1], size.height * 0.1)
+        assert.equal(circle.dimensions[2], size.width * 0.9)
+        assert.equal(circle.dimensions[3], size.height * 0.9)
+        assert.equal(circle.dimensions[4], size.width * 0.5)
+        assert.equal(circle.dimensions[5], size.height * 0.5)
+      }).then(done).catch(done)
     })
   })
 
@@ -69,13 +71,13 @@ describe('CircleStream', function() {
     writeStream.on('close', function () {
       Promise.join(getImageSize(input), getImageSize(out)).spread(function (image1, image2) {
         assert.deepEqual(image1, image2)
-      }).then(done)
+      }).then(done).catch(done)
     })
 
   })
 
   it('should return with a circular image', function (done) {
-    var circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 })
+    var circle = new CircleStream({ x0: 20, y0: 20, x1: 480, y1: 380 })
       , out = join(tmp, 'bill-circle-test.png')
       , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
       , readStream = fs.createReadStream(input)
@@ -91,7 +93,7 @@ describe('CircleStream', function() {
     writeStream.on('close', function () {
       Promise.join(readImage(out), readImage(expectedOut)).spread(function (image1, image2) {
         assert.equal(bufferEqual(image1, image2), true, 'Output should be as expected')
-      }).then(done)
+      }).then(done).catch(done)
     })
   })
 
