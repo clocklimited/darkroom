@@ -29,7 +29,7 @@ describe('CropStream', function() {
   })
 
   describe('gravity', function () {
-    it('should return an image of the requested size', function (done) {
+    it('should return an image of the requested size when a portrait image is cropped', function (done) {
       var options = {
           crop: {
             w: 720
@@ -38,11 +38,40 @@ describe('CropStream', function() {
         , gravity: 'Center'
         }
         , image = new CropStream()
-        , out = join(tmp, 'crop-gravity-test.png')
-        , input = join(__dirname, 'fixtures', 'gravity-original.jpeg')
+        , out = join(tmp, 'crop-gravity-portrait-test.png')
+        , input = join(__dirname, 'fixtures', 'gravity-portrait-original.jpeg')
         , readStream = fs.createReadStream(input)
         , writeStream = fs.createWriteStream(out)
-        , expectedOut = join(__dirname, 'fixtures', 'gravity-cropped.jpeg')
+        , expectedOut = join(__dirname, 'fixtures', 'gravity-portrait-cropped.jpeg')
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      function readImage(img) {
+        return fs.readFileAsync(img)
+      }
+
+      writeStream.on('close', function () {
+        Promise.join(readImage(out), readImage(expectedOut)).spread(function (image1, image2) {
+          assert.equal(bufferEqual(image1, image2), true, 'Output should be as expected')
+        }).then(done).catch(done)
+      })
+
+    })
+
+    it('should return an image of the requested size when a landscape image is cropped', function (done) {
+      var options = {
+          crop: {
+            w: 400
+          , h: 400
+          }
+        , gravity: 'Center'
+        }
+        , image = new CropStream()
+        , out = join(tmp, 'crop-gravity-landscape-test.png')
+        , input = join(__dirname, 'fixtures', 'gravity-landscape-original.jpeg')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'gravity-landscape-cropped.jpeg')
 
       readStream.pipe(image).pipe(writeStream, options)
 
