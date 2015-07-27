@@ -5,12 +5,9 @@ var assert = require('assert')
   , tmp = join(__dirname, 'fixtures', 'temp')
   , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
-  , Promise = require('bluebird')
-  , fs = Promise.promisifyAll(require('fs'))
-  , gm = require('gm')
+  , fs = require('fs')
   , bufferEqual = require('buffer-equal')
-
-Promise.promisifyAll(gm.prototype)
+  , async = require('async')
 
 describe('CropStream', function() {
 
@@ -46,14 +43,25 @@ describe('CropStream', function() {
 
       readStream.pipe(image).pipe(writeStream, options)
 
-      function readImage(img) {
-        return fs.readFileAsync(img)
+      function readImage(img, cb) {
+        fs.readFile(img, function (err, image) {
+          cb(err, image)
+        })
       }
 
       writeStream.on('close', function () {
-        Promise.join(readImage(out), readImage(expectedOut)).spread(function (image1, image2) {
-          assert.equal(bufferEqual(image1, image2), true, 'Output should be as expected')
-        }).then(done).catch(done)
+        async.parallel(
+          { readActualImage: readImage.bind(null, out)
+          , readExpectedImage: readImage.bind(null, expectedOut)
+          }
+        , function (err, results) {
+            assert.equal(bufferEqual(results.readActualImage, results.readExpectedImage)
+              , true
+              , 'Output should be es expected'
+            )
+            done()
+          }
+        )
       })
 
     })
@@ -75,16 +83,26 @@ describe('CropStream', function() {
 
       readStream.pipe(image).pipe(writeStream, options)
 
-      function readImage(img) {
-        return fs.readFileAsync(img)
+      function readImage(img, cb) {
+        fs.readFile(img, function (err, image) {
+          cb(err, image)
+        })
       }
 
       writeStream.on('close', function () {
-        Promise.join(readImage(out), readImage(expectedOut)).spread(function (image1, image2) {
-          assert.equal(bufferEqual(image1, image2), true, 'Output should be as expected')
-        }).then(done).catch(done)
+        async.parallel(
+          { readActualImage: readImage.bind(null, out)
+          , readExpectedImage: readImage.bind(null, expectedOut)
+          }
+        , function (err, results) {
+            assert.equal(bufferEqual(results.readActualImage, results.readExpectedImage)
+              , true
+              , 'Output should be es expected'
+            )
+            done()
+          }
+        )
       })
-
     })
   })
 })
