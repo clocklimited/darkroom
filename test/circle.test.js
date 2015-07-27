@@ -5,14 +5,12 @@ var assert = require('assert')
   , tmp = join(__dirname, 'fixtures', 'temp')
   , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
-  , Promise = require('bluebird')
-  , fs = Promise.promisifyAll(require('fs'))
+  , fs = require('fs')
   , gm = require('gm')
   , bufferEqual = require('buffer-equal')
   , imageType = require('image-type')
   , max = require('lodash.max')
-
-Promise.promisifyAll(gm.prototype)
+  , async = require('async')
 
 describe('CircleStream', function() {
 
@@ -64,14 +62,19 @@ describe('CircleStream', function() {
 
     readStream.pipe(circle).pipe(writeStream)
 
-    function getImageSize(img) {
-      return gm(img).sizeAsync()
+    function getImageSize(img, cb) {
+      return gm(img).size(cb)
     }
 
     writeStream.on('close', function () {
-      Promise.join(getImageSize(input), getImageSize(out)).spread(function (image1, image2) {
-        assert.deepEqual(image1, image2)
-      }).then(done).catch(done)
+      async.parallel(
+        [ getImageSize.bind(null, input)
+        , getImageSize.bind(null, out)
+        ], function (err, results) {
+        if (err) return done(err)
+        assert.deepEqual(results[0], results[1])
+        return done()
+      })
     })
 
   })
@@ -86,14 +89,19 @@ describe('CircleStream', function() {
 
     readStream.pipe(circle).pipe(writeStream)
 
-    function readImage(img) {
-      return fs.readFileAsync(img)
+    function readImage(img, cb) {
+      return fs.readFile(img, cb)
     }
 
     writeStream.on('close', function () {
-      Promise.join(readImage(out), readImage(expectedOut)).spread(function (image1, image2) {
-        assert.equal(bufferEqual(image1, image2), true, 'Output should be as expected')
-      }).then(done).catch(done)
+      async.parallel(
+        [ readImage.bind(null, out)
+        , readImage.bind(null, expectedOut)
+        ], function (err, results) {
+          if (err) return done(err)
+          assert.equal(bufferEqual(results[0], results[1]), true, 'Output should be as expected')
+          return done()
+        })
     })
   })
 
@@ -104,6 +112,7 @@ describe('CircleStream', function() {
       , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
       , readStream = fs.createReadStream(input)
       , writeStream = fs.createWriteStream(out)
+      , histogramPath = join(tmp, 'histogram.txt')
 
     readStream.pipe(circle).pipe(writeStream)
 
@@ -124,32 +133,30 @@ describe('CircleStream', function() {
       return counts
     }
 
-    function assertMainImageColour(histogram) {
-      return fs.readFileAsync(histogram).then(function (file) {
+    function assertMainImageColour(err) {
+      if (err) return done(err)
+      fs.readFile(histogramPath, function (err, file) {
+        if (err) return done(err)
         var counts = file.toString().split('\n')
           .map(getColour)
           .reduce(countColours, {})
 
-        return assert.equal(max(counts, 'count').colour, colour)
+        assert.equal(max(counts, 'count').colour, colour)
+        return done()
       })
     }
 
     function createImageHistogram() {
-      var histogramPath = join(tmp, 'histogram.txt')
-
-      return gm(out).command('convert')
-        .writeAsync(histogramPath)
-        .then(function () {
-          return assertMainImageColour(histogramPath)
-        })
+      return gm(out).command('convert').write(histogramPath, assertMainImageColour)
     }
 
     writeStream.on('close', function () {
-      fs.readFileAsync(out)
-        .then(assertFileType)
-        .then(createImageHistogram)
-        .then(done)
-        .catch(done)
+      fs.readFile(out, function (err, file) {
+        if (err) return done(err)
+
+        assertFileType(file)
+        createImageHistogram()
+      })
     })
   })
 })
