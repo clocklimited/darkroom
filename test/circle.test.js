@@ -32,19 +32,21 @@ describe('CircleStream', function() {
 
     readStream.pipe(circle).pipe(writeStream)
 
-    function getImageSize(img) {
-      return gm(img).sizeAsync()
+    function getImageSize(img, cb) {
+      return gm(img).size(cb)
     }
 
     writeStream.on('close', function () {
-      getImageSize(input).then(function (size) {
+      getImageSize(input, function (err, size) {
+        if (err) return done(err)
         assert.equal(circle.dimensions[0], size.width * 0.1)
         assert.equal(circle.dimensions[1], size.height * 0.1)
         assert.equal(circle.dimensions[2], size.width * 0.9)
         assert.equal(circle.dimensions[3], size.height * 0.9)
         assert.equal(circle.dimensions[4], size.width * 0.5)
         assert.equal(circle.dimensions[5], size.height * 0.5)
-      }).then(done).catch(done)
+        done()
+      })
     })
   })
 
