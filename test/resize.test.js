@@ -78,9 +78,9 @@ describe('ResizeStream', function() {
     )
 
     writeStream.on('close', function() {
-       gm(filepath).identify(function (err, data) {
-        data.size.width.should.equal(100)
-        data.size.height.should.equal(50)
+       gm(filepath).size(function (err, size) {
+        size.width.should.equal(100)
+        size.height.should.equal(50)
         done()
       })
     })
@@ -312,9 +312,9 @@ describe('ResizeStream', function() {
     )
 
     writeStream.on('close', function() {
-       gm(filepath).identify(function (err, data) {
-        data.size.width.should.equal(600)
-        data.size.height.should.equal(479)
+       gm(filepath).size(function (err, size) {
+        size.width.should.equal(600)
+        size.height.should.equal(479)
         done()
       })
     })
