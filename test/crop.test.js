@@ -8,6 +8,7 @@ var assert = require('assert')
   , fs = require('fs')
   , bufferEqual = require('buffer-equal')
   , async = require('async')
+  , gm = require('gm')
 
 describe('CropStream', function() {
 
@@ -43,25 +44,16 @@ describe('CropStream', function() {
 
       readStream.pipe(image).pipe(writeStream, options)
 
-      function readImage(img, cb) {
-        fs.readFile(img, function (err, image) {
-          cb(err, image)
-        })
-      }
-
       writeStream.on('close', function () {
-        async.parallel(
-          { readActualImage: readImage.bind(null, out)
-          , readExpectedImage: readImage.bind(null, expectedOut)
-          }
-        , function (err, results) {
-            assert.equal(bufferEqual(results.readActualImage, results.readExpectedImage)
-              , true
-              , 'Output should be es expected'
-            )
-            done()
-          }
-        )
+        var options =
+        { file: tmp + 'crop-gravity-portrait-test-diff.jpeg'
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+        gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
       })
 
     })
@@ -83,25 +75,16 @@ describe('CropStream', function() {
 
       readStream.pipe(image).pipe(writeStream, options)
 
-      function readImage(img, cb) {
-        fs.readFile(img, function (err, image) {
-          cb(err, image)
-        })
-      }
-
       writeStream.on('close', function () {
-        async.parallel(
-          { readActualImage: readImage.bind(null, out)
-          , readExpectedImage: readImage.bind(null, expectedOut)
-          }
-        , function (err, results) {
-            assert.equal(bufferEqual(results.readActualImage, results.readExpectedImage)
-              , true
-              , 'Output should be es expected'
-            )
-            done()
-          }
-        )
+        var options =
+        { file: tmp + 'crop-gravity-landscape-test-diff.jpeg'
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+        gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
       })
     })
   })
