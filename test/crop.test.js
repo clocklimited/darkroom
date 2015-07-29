@@ -26,6 +26,39 @@ describe('CropStream', function() {
     assert(s instanceof DarkroomStream)
   })
 
+  describe('orientation', function () {
+    it('should auto orient the image for the cropped output', function (done) {
+      var options = {
+          crop:
+            { w: 300
+            , h: 200
+            , xOffset: 100
+            , yOffset: 200
+            }
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg')
+        , out = join(tmp, 'oriented-right-in-exif-cropped.jpeg')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'oriented-right-in-exif-cropped-expected.jpeg')
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        var options =
+        { file: join(tmp, 'oriented-right-in-exif-cropped-diff.jpeg')
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+        gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+  })
+
   describe('gravity', function () {
     it('should return an image of the requested size when a portrait image is cropped', function (done) {
       var options = {
