@@ -2,7 +2,8 @@ var Resize = require('../lib/resize')
   , streamToTest = require('./stream.fixture.js')
   , fs = require('fs')
   , join = require('path').join
-  , tmp = join(__dirname, 'fixtures', 'temp')
+  , tmp
+  , temp = require('temp')
   , resize
   , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
@@ -11,11 +12,14 @@ var Resize = require('../lib/resize')
 describe('ResizeStream', function() {
 
   before(function () {
-    rimraf.sync(tmp)
-    mkdirp.sync(tmp)
+    temp.mkdir('crop-test', function(err, path) {
+      tmp = path
+    })
   })
 
   after(function () {
+    // If you need to see some of the image diffs from failing test comment
+    // out this line.
     rimraf.sync(tmp)
   })
 

@@ -2,7 +2,8 @@ var assert = require('assert')
   , CropStream = require('../lib/crop')
   , DarkroomStream = require('../lib/darkroom-stream')
   , join = require('path').join
-  , tmp = join(__dirname, 'fixtures', 'temp')
+  , tmp
+  , temp = require('temp')
   , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
   , fs = require('fs')
@@ -13,11 +14,14 @@ var assert = require('assert')
 describe('CropStream', function() {
 
   before(function () {
-    rimraf.sync(tmp)
-    mkdirp.sync(tmp)
+    temp.mkdir('crop-test', function(err, path) {
+      tmp = path
+    })
   })
 
   after(function () {
+    // If you need to see some of the image diffs from failing test comment
+    // out this line.
     rimraf.sync(tmp)
   })
 
