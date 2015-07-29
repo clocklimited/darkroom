@@ -7,20 +7,16 @@
     "registry": "http://npm.clockte.ch/"
   },
   "dependencies": {
-    "async": "^0.9.0",
-    "gm": "^1.17.0",
-    "mkdirp": "^0.5.0",
-    "mocha": "^2.1.0",
-    "rimraf": "^2.2.8",
-    "should": "^5.0.0",
-    "temp": "^0.8.1"
+    "async": "^1.4.0",
+    "gm": "^1.18.1",
+    "temp": "^0.8.3"
   },
   "devDependencies": {
     "buffer-equal": "0.0.1",
-    "mkdirp": "^0.5.0",
-    "mocha": "^1.21.4",
-    "rimraf": "^2.2.8",
-    "should": "^4.0.0"
+    "mkdirp": "^0.5.1",
+    "mocha": "^2.2.5",
+    "rimraf": "^2.4.2",
+    "should": "^7.0.2"
   },
   "scripts": {
     "test": "mocha -r should test"
