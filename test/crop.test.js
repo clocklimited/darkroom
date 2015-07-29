@@ -36,7 +36,7 @@ describe('CropStream', function() {
         , gravity: 'Center'
         }
         , image = new CropStream()
-        , out = join(tmp, 'crop-gravity-portrait-test.png')
+        , out = join(tmp, 'gravity-portrait-cropped-test.png')
         , input = join(__dirname, 'fixtures', 'gravity-portrait-original.jpeg')
         , readStream = fs.createReadStream(input)
         , writeStream = fs.createWriteStream(out)
@@ -46,7 +46,7 @@ describe('CropStream', function() {
 
       writeStream.on('close', function () {
         var options =
-        { file: tmp + 'crop-gravity-portrait-test-diff.jpeg'
+        { file: join(tmp, 'gravity-portrait-cropped-diff.jpeg')
         , tolerance: 0.001
         , highlightColor: 'yellow'
         }
@@ -67,7 +67,7 @@ describe('CropStream', function() {
         , gravity: 'Center'
         }
         , image = new CropStream()
-        , out = join(tmp, 'crop-gravity-landscape-test.png')
+        , out = join(tmp, 'gravity-landscape-cropped-test.png')
         , input = join(__dirname, 'fixtures', 'gravity-landscape-original.jpeg')
         , readStream = fs.createReadStream(input)
         , writeStream = fs.createWriteStream(out)
@@ -77,7 +77,7 @@ describe('CropStream', function() {
 
       writeStream.on('close', function () {
         var options =
-        { file: tmp + 'crop-gravity-landscape-test-diff.jpeg'
+        { file: join(tmp, 'gravity-landscape-cropped-diff.jpeg')
         , tolerance: 0.001
         , highlightColor: 'yellow'
         }
