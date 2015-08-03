@@ -1,10 +1,17 @@
-darkroom
-========
+# darkroom
 
 An image manipulation library.
 
-# Installation
-## Mac OS X 10.8
-    Install X11 from here: http://xquartz.macosforge.org/
-    brew install gm
-    npm install
+## Installation
+
+As of v4.0.0 darkroom requires 1.3.20+ to work correctly.
+
+It will still mostly work with GraphicsMagick 1.3.18+ but the `resize({ mode: 'fit '})` will
+not work due to this [#36](https://github.com/clocklimited/Darkroom-api/issues/36)
+
+v4 will not work well with GraphicsMagick pre 1.3.18
+
+### Mac OS 
+
+    brew install graphicsmagick
+    npm install --save

@@ -2,7 +2,8 @@ var Resize = require('../lib/resize')
   , streamToTest = require('./stream.fixture.js')
   , fs = require('fs')
   , join = require('path').join
-  , tmp = join(__dirname, 'fixtures', 'temp')
+  , tmp
+  , temp = require('temp')
   , resize
   , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
@@ -11,11 +12,14 @@ var Resize = require('../lib/resize')
 describe('ResizeStream', function() {
 
   before(function () {
-    rimraf.sync(tmp)
-    mkdirp.sync(tmp)
+    temp.mkdir('crop-test', function(err, path) {
+      tmp = path
+    })
   })
 
   after(function () {
+    // If you need to see some of the image diffs from failing test comment
+    // out this line.
     rimraf.sync(tmp)
   })
 
@@ -78,9 +82,9 @@ describe('ResizeStream', function() {
     )
 
     writeStream.on('close', function() {
-       gm(filepath).identify(function (err, data) {
-        data.size.width.should.equal(100)
-        data.size.height.should.equal(50)
+       gm(filepath).size(function (err, size) {
+        size.width.should.equal(100)
+        size.height.should.equal(50)
         done()
       })
     })
@@ -312,9 +316,9 @@ describe('ResizeStream', function() {
     )
 
     writeStream.on('close', function() {
-       gm(filepath).identify(function (err, data) {
-        data.size.width.should.equal(600)
-        data.size.height.should.equal(479)
+       gm(filepath).size(function (err, size) {
+        size.width.should.equal(600)
+        size.height.should.equal(479)
         done()
       })
     })
