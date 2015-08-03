@@ -5,15 +5,16 @@ var Resize = require('../lib/resize')
   , tmp
   , temp = require('temp')
   , resize
-  , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
   , gm = require('gm')
 
 describe('ResizeStream', function() {
 
-  before(function () {
-    temp.mkdir('crop-test', function(err, path) {
+  before(function (done) {
+    temp.mkdir('resize-test', function(err, path) {
+      if (err) return done(err)
       tmp = path
+      done()
     })
   })
 
@@ -263,7 +264,6 @@ describe('ResizeStream', function() {
       })
     })
   })
-
 
   it('should correctly ‘cover’ with a landscape constrained to 100x100 with an 8bit png', function (done) {
     resize.chunks.should.have.lengthOf(0)
