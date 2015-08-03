@@ -7,7 +7,6 @@ var assert = require('assert')
   , rimraf = require('rimraf')
   , fs = require('fs')
   , gm = require('gm')
-  , bufferEqual = require('buffer-equal')
   , imageType = require('image-type')
   , max = require('lodash.max')
   , async = require('async')
@@ -89,19 +88,17 @@ describe('CircleStream', function() {
 
     readStream.pipe(circle).pipe(writeStream)
 
-    function readImage(img, cb) {
-      return fs.readFile(img, cb)
-    }
-
     writeStream.on('close', function () {
-      async.parallel(
-        [ readImage.bind(null, out)
-        , readImage.bind(null, expectedOut)
-        ], function (err, results) {
-          if (err) return done(err)
-          assert.equal(bufferEqual(results[0], results[1]), true, 'Output should be as expected')
-          return done()
-        })
+      var options =
+        { file: out
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+
+      gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+        assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+        done()
+      })
     })
   })
 
