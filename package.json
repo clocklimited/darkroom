@@ -12,15 +12,22 @@
     "temp": "^0.8.3"
   },
   "devDependencies": {
+    "image-type": "^2.0.2",
+    "istanbul": "^0.3.17",
+    "jscs": "^1.8.1",
+    "jshint": "^2.8.0",
+    "lodash.max": "^3.4.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.5",
     "rimraf": "^2.4.2",
-    "should": "^7.0.2",
-    "image-type": "^2.0.2",
-    "lodash.max": "^3.4.0"
+    "should": "^7.0.2"
   },
   "scripts": {
-    "test": "mocha -r should test"
+    "lint": "jshint .",
+    "checkStyle": "jscs .",
+    "pretest": "npm run lint && npm run checkStyle",
+    "test": "istanbul cover _mocha -- -r should",
+    "posttest": "istanbul check-coverage --statements 60 --branches 50 --functions 60 --lines 60 && rm -rf coverage"
   },
   "repository": {
     "type": "git",

@@ -4,11 +4,8 @@ var assert = require('assert')
   , join = require('path').join
   , tmp
   , temp = require('temp')
-  , mkdirp = require('mkdirp')
   , rimraf = require('rimraf')
   , fs = require('fs')
-  , bufferEqual = require('buffer-equal')
-  , async = require('async')
   , gm = require('gm')
 
 describe('CropStream', function() {
