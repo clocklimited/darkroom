@@ -10,9 +10,11 @@ var Resize = require('../lib/resize')
 
 describe('ResizeStream', function() {
 
-  before(function () {
-    temp.mkdir('crop-test', function(err, path) {
+  before(function (done) {
+    temp.mkdir('resize-test', function(err, path) {
+      if (err) return done(err)
       tmp = path
+      done()
     })
   })
 
