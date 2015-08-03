@@ -32,7 +32,6 @@
   , "beforeEach"
   , "after"
   , "afterEach"
-  , "-Promise"
   ]
 , "smarttabs": true
 , "strict": false

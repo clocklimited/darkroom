@@ -39,12 +39,10 @@ describe('CircleStream', function() {
     writeStream.on('close', function () {
       getImageSize(input, function (err, size) {
         if (err) return done(err)
-        assert.equal(circle.dimensions[0], size.width * 0.1)
-        assert.equal(circle.dimensions[1], size.height * 0.1)
-        assert.equal(circle.dimensions[2], size.width * 0.9)
-        assert.equal(circle.dimensions[3], size.height * 0.9)
-        assert.equal(circle.dimensions[4], size.width * 0.5)
-        assert.equal(circle.dimensions[5], size.height * 0.5)
+        assert.equal(circle.options.x0, size.width / 2)
+        assert.equal(circle.options.y0, size.height / 2)
+        assert.equal(circle.options.x1, size.width * 0.8)
+        assert.equal(circle.options.y1, size.height * 0.8)
         done()
       })
     })
@@ -82,7 +80,7 @@ describe('CircleStream', function() {
   })
 
   it('should return with a circular image', function (done) {
-    var circle = new CircleStream({ x0: 20, y0: 20, x1: 480, y1: 380 })
+    var circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 })
       , out = join(tmp, 'bill-circle-test.png')
       , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
       , readStream = fs.createReadStream(input)
