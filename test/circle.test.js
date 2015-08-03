@@ -2,8 +2,8 @@ var assert = require('assert')
   , CircleStream = require('../lib/circle')
   , DarkroomStream = require('../lib/darkroom-stream')
   , join = require('path').join
-  , tmp = join(__dirname, 'fixtures', 'temp')
-  , mkdirp = require('mkdirp')
+  , tmp
+  , temp = require('temp')
   , rimraf = require('rimraf')
   , fs = require('fs')
   , gm = require('gm')
@@ -13,12 +13,17 @@ var assert = require('assert')
 
 describe('CircleStream', function() {
 
-  before(function () {
-    rimraf.sync(tmp)
-    mkdirp.sync(tmp)
+  before(function (done) {
+    temp.mkdir('circle-test', function(err, path) {
+      if (err) return done(err)
+      tmp = path
+      done()
+    })
   })
 
   after(function () {
+    // If you need to see some of the image diffs from failing test comment
+    // out this line.
     rimraf.sync(tmp)
   })
 
@@ -90,7 +95,7 @@ describe('CircleStream', function() {
 
     writeStream.on('close', function () {
       var options =
-        { file: out
+        { file: join(tmp, 'bill-circle-test-diff.png')
         , tolerance: 0.001
         , highlightColor: 'yellow'
         }
