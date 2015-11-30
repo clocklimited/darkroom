@@ -1,6 +1,6 @@
 {
   "name": "darkroom",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
   "publishConfig": {
