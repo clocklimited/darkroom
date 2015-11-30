@@ -108,7 +108,7 @@ describe('CircleStream', function() {
   })
 
   it('should save as a jpg if background colour is given', function (done) {
-    var colour = '#0165FF'
+    var colour = '#0166FF'
       , circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320, colour: colour })
       , out = join(tmp, 'bill-circle-test.jpg')
       , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
