@@ -7,6 +7,7 @@ var Resize = require('../lib/resize')
   , resize
   , rimraf = require('rimraf')
   , gm = require('gm')
+  , assert = require('assert')
 
 describe('ResizeStream', function() {
 
@@ -64,6 +65,34 @@ describe('ResizeStream', function() {
       fs.readFile(filePath, function (err, data) {
         if (err) throw err
         data.length.should.be.above(100)
+        done()
+      })
+    })
+  })
+
+  it('should correctly resize animated gifs', function (done) {
+    var input = join(__dirname, 'fixtures', 'animated.gif')
+      , filePath = join(tmp, 'out.gif')
+      , expectedOutput = join(__dirname, 'fixtures', 'resized-animated.gif')
+      , readStream = fs.createReadStream(input)
+      , writeStream = fs.createWriteStream(filePath)
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 200
+      , height: 200
+      , mode: 'cover'
+      , interlaced: false
+      }
+    )
+
+    writeStream.on('close', function() {
+      var options =
+        { file: join(tmp, 'resized-animated-diff.gif')
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+       gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+        assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
         done()
       })
     })
@@ -366,7 +395,7 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('Corrupted image should trigger error', function (done) {
+  it('should trigger error with a corrupted image', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, 'broken-image.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
@@ -380,10 +409,7 @@ describe('ResizeStream', function() {
 
     resize.on('error', function() {
       fs.readFile(filepath, function (err) {
-        if (err) {
-          throw err
-        }
-        done()
+        done(err)
       })
     })
   })

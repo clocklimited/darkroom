@@ -33,8 +33,6 @@ describe('CropStream', function() {
           crop:
             { w: 300
             , h: 200
-            , xOffset: 100
-            , yOffset: 200
             }
         }
         , image = new CropStream()
@@ -112,6 +110,72 @@ describe('CropStream', function() {
       writeStream.on('close', function () {
         var options =
         { file: join(tmp, 'gravity-landscape-cropped-diff.jpeg')
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+        gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+  })
+
+  describe('gif', function () {
+    it('should correctly crop single page gif', function (done) {
+      var options = {
+          crop: {
+            w: 90
+          , h: 80
+          , x1: 100
+          , y1: 30
+          }
+        , gravity: 'NorthWest'
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'test-pattern.gif')
+        , out = join(tmp, 'test-pattern-test.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'test-pattern-cropped.gif')
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        var options =
+        { file: join(tmp, 'animated-cropped-diff.gif')
+        , tolerance: 0.001
+        , highlightColor: 'yellow'
+        }
+        gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+
+    it('should correctly crop animated gif', function (done) {
+      var options = {
+          crop: {
+            w: 90
+          , h: 80
+          , x1: 100
+          , y1: 30
+          }
+        , gravity: 'NorthWest'
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'animated.gif')
+        , out = join(tmp, 'animated-cropped.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'animated-cropped.gif')
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        var options =
+        { file: join(tmp, 'animated-cropped-diff.gif')
         , tolerance: 0.001
         , highlightColor: 'yellow'
         }
