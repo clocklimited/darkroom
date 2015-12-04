@@ -8,6 +8,7 @@ var Resize = require('../lib/resize')
   , rimraf = require('rimraf')
   , gm = require('gm')
   , assert = require('assert')
+  , Writable = require('stream').Writable
 
 describe('ResizeStream', function() {
 
@@ -397,9 +398,8 @@ describe('ResizeStream', function() {
 
   it('should trigger error with a corrupted image', function (done) {
     resize.chunks.should.have.lengthOf(0)
-    var filepath = join(tmp, 'broken-image.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
-      , writeStream = fs.createWriteStream(filepath)
+    var readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
+      , writeStream = new Writable()
 
     readStream.pipe(resize).pipe(writeStream
       , { width: 100
@@ -407,10 +407,12 @@ describe('ResizeStream', function() {
       }
     )
 
+    writeStream.on('data', function () {
+      done(new Error('Write stream should not receive any data for corrupt image input'))
+    })
+
     resize.on('error', function() {
-      fs.readFile(filepath, function (err) {
-        done(err)
-      })
+      done()
     })
   })
 })
