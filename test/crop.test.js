@@ -187,6 +187,106 @@ describe('CropStream', function() {
     })
   })
 
+  describe('format', function () {
+    it('image should be formatted as PNG', function (done) {
+      var options = {
+          crop:
+            { w: 300
+            , h: 200
+            }
+        , format: 'png'
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg')
+        , out = join(tmp, 'formatted-png')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        gm(out).format(function (err, value) {
+          assert.equal(value, 'PNG')
+          done()
+        })
+      })
+    })
+
+    it('image should be formatted as JPEG', function (done) {
+      var options = {
+          crop:
+            { w: 300
+            , h: 200
+            }
+        , format: 'jpg'
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg')
+        , out = join(tmp, 'formatted-jpeg')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        gm(out).format(function (err, value) {
+          assert.equal(value, 'JPEG')
+          done()
+        })
+      })
+    })
+
+
+    it.only('image should be in its original format when no format is supplied', function (done) {
+      var options = {
+          crop:
+            { w: 300
+            , h: 200
+            }
+        }
+        , jpegImage = new CropStream()
+        , pngImage = new CropStream()
+        , gifImage = new CropStream()
+        , jpegInput = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg')
+        , pngInput = join(__dirname, 'fixtures', 'bill-circle.png')
+        , gifInput = join(__dirname, 'fixtures', 'test-pattern.gif')
+        , jpegOut = join(tmp, 'no-format-change-jpeg')
+        , pngOut = join(tmp, 'no-format-change-png')
+        , gifOut = join(tmp, 'no-format-change-gif')
+        , jpegReadStream = fs.createReadStream(jpegInput)
+        , pngReadStream = fs.createReadStream(pngInput)
+        , gifReadStream = fs.createReadStream(gifInput)
+        , jpegWriteStream = fs.createWriteStream(jpegOut)
+        , pngWriteStream = fs.createWriteStream(pngOut)
+        , gifWriteStream = fs.createWriteStream(gifOut)
+
+      jpegReadStream.pipe(jpegImage).pipe(jpegWriteStream, options)
+      pngReadStream.pipe(pngImage).pipe(pngWriteStream, options)
+      gifReadStream.pipe(gifImage).pipe(gifWriteStream, options)
+
+      jpegWriteStream.on('close', function () {
+        gm(jpegOut).format(function (err, value) {
+          assert.equal(value, 'JPEG')
+          done()
+        })
+      })
+
+      pngWriteStream.on('close', function () {
+        gm(pngOut).format(function (err, value) {
+          assert.equal(value, 'PNG')
+          done()
+        })
+      })
+
+      gifWriteStream.on('close', function () {
+        gm(gifOut).format(function (err, value) {
+          assert.equal(value, 'GIF')
+          done()
+        })
+      })
+    })
+  })
+
   it('Corrupted image should trigger error', function (done) {
     var filepath = join(tmp, 'broken-image.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
