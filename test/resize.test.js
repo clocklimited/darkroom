@@ -375,7 +375,7 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('should return an image of the same format as the input if not other format is specified', function (done) {
+  it('should return an image of the same format as the input if no other format is specified', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, 'iampng')
       , inputfile = join(__dirname, 'fixtures', '500x399-24bit.png')

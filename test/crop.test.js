@@ -10,9 +10,10 @@ var assert = require('assert')
 
 describe('CropStream', function() {
 
-  before(function () {
+  before(function (done) {
     temp.mkdir('crop-test', function(err, path) {
       tmp = path
+      done()
     })
   })
 
