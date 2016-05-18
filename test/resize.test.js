@@ -375,7 +375,7 @@ describe('ResizeStream', function() {
     })
   })
 
-  it('should return a image of the same type as the input ', function (done) {
+  it('should return an image of the same format as the input if no other format is specified', function (done) {
     resize.chunks.should.have.lengthOf(0)
     var filepath = join(tmp, 'iampng')
       , inputfile = join(__dirname, 'fixtures', '500x399-24bit.png')
@@ -391,6 +391,29 @@ describe('ResizeStream', function() {
     writeStream.on('close', function() {
       gm(filepath).identify(function (err, data) {
         data.format.should.equal('PNG')
+        done()
+      })
+    })
+  })
+
+  it('should return an image in the specified format', function (done) {
+    resize.chunks.should.have.lengthOf(0)
+    var filepath = join(tmp, 'iampng')
+      , inputfile = join(__dirname, 'fixtures', '500x399-24bit.png')
+      , readStream = fs.createReadStream(inputfile)
+      , writeStream = fs.createWriteStream(filepath)
+      , format = 'JPEG'
+
+    readStream.pipe(resize).pipe(writeStream
+    , { width: 100
+      , height: 200
+      , format: format
+      }
+    )
+
+    writeStream.on('close', function() {
+      gm(filepath).identify(function (err, data) {
+        data.format.should.equal(format)
         done()
       })
     })
