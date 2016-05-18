@@ -27,6 +27,27 @@ describe('CropStream', function() {
     assert(s instanceof DarkroomStream)
   })
 
+  it('Corrupted image should trigger error', function (done) {
+    var filepath = join(tmp, 'broken-image.png')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
+      , writeStream = fs.createWriteStream(filepath)
+      , cropStream = new CropStream()
+
+    readStream.pipe(cropStream).pipe(writeStream
+      , { crop: {
+            w: 400
+          , h: 400 } })
+
+    cropStream.on('error', function() {
+      fs.readFile(filepath, function (err) {
+        if (err) {
+          throw err
+        }
+        done()
+      })
+    })
+  })
+
   describe('orientation', function () {
     it('should auto orient the image for the cropped output', function (done) {
       var options = {
@@ -187,24 +208,4 @@ describe('CropStream', function() {
     })
   })
 
-  it('Corrupted image should trigger error', function (done) {
-    var filepath = join(tmp, 'broken-image.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
-      , writeStream = fs.createWriteStream(filepath)
-      , cropStream = new CropStream()
-
-    readStream.pipe(cropStream).pipe(writeStream
-      , { crop: {
-            w: 400
-          , h: 400 } })
-
-    cropStream.on('error', function() {
-      fs.readFile(filepath, function (err) {
-        if (err) {
-          throw err
-        }
-        done()
-      })
-    })
-  })
 })
