@@ -20,7 +20,8 @@ describe('CropStream', function() {
   after(function () {
     // If you need to see some of the image diffs from failing test comment
     // out this line.
-    rimraf.sync(tmp)
+    ///rimraf.sync(tmp)
+    console.log(tmp)
   })
 
   it('should be a DarkroomStream', function () {

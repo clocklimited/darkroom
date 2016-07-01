@@ -362,8 +362,8 @@ describe('ResizeStream', function() {
       , writeStream = fs.createWriteStream(filepath)
 
     readStream.pipe(resize).pipe(writeStream
-    , { width: 100
-      , height: 200
+    , { width: 500
+      , height: 399
       }
     )
 
