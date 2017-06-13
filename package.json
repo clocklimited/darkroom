@@ -3,13 +3,10 @@
   "version": "4.5.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
-  "publishConfig": {
-    "registry": "http://npm.clockte.ch/"
-  },
   "dependencies": {
-    "async": "^2.0.0-rc.6",
-    "file-type": "^3.8.0",
-    "gm": "^1.22.0",
+    "async": "^2.4.1",
+    "file-type": "^3.9.0",
+    "gm": "^1.23.0",
     "rimraf": "^2.5.2",
     "temp": "^0.8.3"
   },
