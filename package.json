@@ -8,7 +8,8 @@
     "file-type": "^3.9.0",
     "gm": "^1.23.0",
     "rimraf": "^2.5.2",
-    "temp": "^0.8.3"
+    "temp": "^0.8.3",
+    "snyk": "^1.41.1"
   },
   "devDependencies": {
     "image-type": "^2.0.2",
@@ -25,7 +26,9 @@
     "checkStyle": "jscs .",
     "pretest": "npm run lint && npm run checkStyle",
     "test": "istanbul cover _mocha -- -r should",
-    "posttest": "istanbul check-coverage --statements 60 --branches 50 --functions 60 --lines 60 && rm -rf coverage"
+    "posttest": "istanbul check-coverage --statements 60 --branches 50 --functions 60 --lines 60 && rm -rf coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -35,5 +38,6 @@
     "Kuba Stawiarski",
     "Paul Serby"
   ],
-  "license": "New BSD"
+  "license": "New BSD",
+  "snyk": true
 }
