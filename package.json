@@ -4,22 +4,22 @@
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
   "dependencies": {
-    "async": "^2.4.1",
+    "async": "^2.6.1",
     "file-type": "^3.9.0",
     "gifsicle-stream": "^0.3.1",
-    "gm": "^1.23.0",
+    "gm": "^1.23.1",
     "rimraf": "^2.5.2",
     "temp": "^0.8.3"
   },
   "devDependencies": {
     "image-type": "^2.0.2",
-    "istanbul": "^0.3.17",
+    "istanbul": "^0.4.5",
     "jscs": "^1.8.1",
-    "jshint": "^2.8.0",
+    "jshint": "^2.9.7",
     "lodash.max": "^3.4.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.2.5",
-    "should": "^7.0.2"
+    "mocha": "^5.2.0",
+    "should": "^13.2.3"
   },
   "scripts": {
     "lint": "jshint .",
