@@ -6,6 +6,7 @@
   "dependencies": {
     "async": "^2.4.1",
     "file-type": "^3.9.0",
+    "gifsicle-stream": "^0.3.1",
     "gm": "^1.23.0",
     "rimraf": "^2.5.2",
     "temp": "^0.8.3"
