@@ -23,7 +23,7 @@ describe('ResizeStream', function() {
   after(function () {
     // If you need to see some of the image diffs from failing test comment
     // out this line.
-    rimraf.sync(tmp)
+    // rimraf.sync(tmp)
   })
 
   beforeEach(function() {
@@ -72,6 +72,7 @@ describe('ResizeStream', function() {
   })
 
   it('should correctly resize animated gifs', function (done) {
+    this.timeout(10000)
     var input = join(__dirname, 'fixtures', 'animated.gif')
       , filePath = join(tmp, 'out.gif')
       , expectedOutput = join(__dirname, 'fixtures', 'resized-animated.gif')
