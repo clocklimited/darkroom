@@ -6,10 +6,10 @@
   "dependencies": {
     "async": "^2.6.1",
     "file-type": "^3.9.0",
-    "gifsicle-stream": "^0.3.1",
     "gm": "^1.23.1",
     "rimraf": "^2.5.2",
-    "temp": "^0.8.3"
+    "temp": "^0.8.3",
+    "which": "^1.3.1"
   },
   "devDependencies": {
     "image-type": "^2.0.2",
