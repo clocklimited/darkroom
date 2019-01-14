@@ -8,8 +8,7 @@
     "file-type": "^3.9.0",
     "gm": "^1.23.1",
     "rimraf": "^2.5.2",
-    "temp": "^0.8.3",
-    "which": "^1.3.1"
+    "temp": "^0.8.3"
   },
   "devDependencies": {
     "image-type": "^2.0.2",
