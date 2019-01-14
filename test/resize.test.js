@@ -9,6 +9,7 @@ var Resize = require('../lib/resize')
   , gm = require('gm')
   , assert = require('assert')
   , Writable = require('stream').Writable
+  , async = require('async')
 
 describe('ResizeStream', function() {
 
@@ -66,90 +67,6 @@ describe('ResizeStream', function() {
       fs.readFile(filePath, function (err, data) {
         if (err) throw err
         data.length.should.be.above(100)
-        done()
-      })
-    })
-  })
-
-  it('should correctly cover resize animated gifs', function (done) {
-    var input = join(__dirname, 'fixtures', 'animated.gif')
-      , filePath = join(tmp, 'out-cover.gif')
-      , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-cover.gif')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(filePath)
-
-    readStream.pipe(resize).pipe(writeStream
-    , { width: 200
-      , height: 200
-      , mode: 'cover'
-      , interlaced: false
-      }
-    )
-
-    writeStream.on('close', function() {
-      var options =
-        { file: join(tmp, 'resized-animated-diff.gif')
-        , tolerance: 0.001
-        , highlightColor: 'yellow'
-        }
-       gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
-        assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
-        done()
-      })
-    })
-  })
-
-  it('should correctly fit resize animated gifs', function (done) {
-    var input = join(__dirname, 'fixtures', 'animated.gif')
-      , filePath = join(tmp, 'out-fit.gif')
-      , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-fit.gif')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(filePath)
-
-    readStream.pipe(resize).pipe(writeStream
-    , { width: 200
-      , height: 100
-      , mode: 'fit'
-      , interlaced: false
-      }
-    )
-
-    writeStream.on('close', function() {
-      var options =
-        { file: join(tmp, 'resized-animated-diff.gif')
-        , tolerance: 0.001
-        , highlightColor: 'yellow'
-        }
-       gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
-        assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
-        done()
-      })
-    })
-  })
-  
-  it('should correctly stretch resize animated gifs', function (done) {
-    var input = join(__dirname, 'fixtures', 'animated.gif')
-      , filePath = join(tmp, 'out-stretch.gif')
-      , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-stretch.gif')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(filePath)
-
-    readStream.pipe(resize).pipe(writeStream
-    , { width: 200
-      , height: 100
-      , mode: 'stretch'
-      , interlaced: false
-      }
-    )
-
-    writeStream.on('close', function() {
-      var options =
-        { file: join(tmp, 'resized-animated-diff.gif')
-        , tolerance: 0.001
-        , highlightColor: 'yellow'
-        }
-       gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
-        assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
         done()
       })
     })
@@ -492,6 +409,178 @@ describe('ResizeStream', function() {
 
     resize.on('error', function() {
       done()
+    })
+  })
+
+  describe('gif resizing', function () {
+    it('should correctly cover resize animated gifs', function (done) {
+      var input = join(__dirname, 'fixtures', 'animated.gif')
+        , filePath = join(tmp, 'out-cover.gif')
+        , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-cover.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(filePath)
+
+      readStream.pipe(resize).pipe(writeStream
+      , { width: 200
+        , height: 200
+        , mode: 'cover'
+        , interlaced: false
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, 'resized-animated-cover-diff.gif')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+         gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+
+    it('should correctly fit resize animated gifs', function (done) {
+      var input = join(__dirname, 'fixtures', 'animated.gif')
+        , filePath = join(tmp, 'out-fit.gif')
+        , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-fit.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(filePath)
+
+      readStream.pipe(resize).pipe(writeStream
+      , { width: 200
+        , height: 100
+        , mode: 'fit'
+        , interlaced: false
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, 'resized-animated-fit-diff.gif')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+         gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+
+    it('should correctly fit resize animated gifs with one dimens', function (done) {
+      var input = join(__dirname, 'fixtures', 'animated.gif')
+        , filePath = join(tmp, 'out-fit-height.gif')
+        , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-fit-height.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(filePath)
+
+      readStream.pipe(resize).pipe(writeStream
+      , { height: 200
+        , mode: 'fit'
+        , interlaced: false
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, 'resized-animated-fit-height-diff.gif')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+         gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+
+    it('should correctly stretch resize animated gifs', function (done) {
+      var input = join(__dirname, 'fixtures', 'animated.gif')
+        , filePath = join(tmp, 'out-stretch.gif')
+        , expectedOutput = join(__dirname, 'fixtures', 'resized-animated-stretch.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(filePath)
+
+      readStream.pipe(resize).pipe(writeStream
+      , { width: 200
+        , height: 100
+        , mode: 'stretch'
+        , interlaced: false
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, 'resized-animated-stretch-diff.gif')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+         gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+
+    it('should not match a failed resize done by graphicsmagick', function (done) {
+      this.timeout('15000')
+      var input = join(__dirname, 'fixtures', 'landscape.gif')
+        , filePath = join(tmp, 'out-landscape-fit.gif')
+        , gmOutput = join(__dirname, 'fixtures', 'landscape-resized-gm.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(filePath)
+
+      readStream.pipe(resize).pipe(writeStream
+      , { height: 200
+        , mode: 'fit'
+        , interlaced: false
+        }
+      )
+
+      writeStream.on('close', function() {
+        async.map([ gmOutput, filePath ], function (item, cb) {
+          gm(item).identify(function (err, result) {
+            cb(err, result)
+          })
+        }, function (err, results) {
+          var item = results[0]
+            , other = results[1]
+
+          assert.notDeepEqual(item.size, other.size, 'Gifs should not match in size')
+          assert.equal(item.Format.length, other.Format.length, 'Both gifs should have the same number of frames')
+          assert.notDeepEqual(item.Geometry, other.Geometry, 'Gif frame geometry should differ')
+          done()
+        })
+      })
+    })
+
+    it('should correctly resize optimised animated gifs', function (done) {
+      var input = join(__dirname, 'fixtures', 'landscape.gif')
+        , filePath = join(tmp, 'out-landscape-fit.gif')
+        , expectedOutput = join(__dirname, 'fixtures', 'landscape-resized-gifsicle.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(filePath)
+
+      readStream.pipe(resize).pipe(writeStream
+      , { height: 200
+        , mode: 'fit'
+        , interlaced: false
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, 'landscape-resized-diff.gif')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+        gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
     })
   })
 })
