@@ -29,9 +29,30 @@ describe('CropStream', function() {
     assert(s instanceof DarkroomStream)
   })
 
-  it('Corrupted image should trigger error', function (done) {
+  it('Corrupted png should trigger error', function (done) {
     var filepath = join(tmp, 'broken-image.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
+      , writeStream = fs.createWriteStream(filepath)
+      , cropStream = new CropStream()
+
+    readStream.pipe(cropStream).pipe(writeStream
+      , { crop: {
+            w: 400
+          , h: 400 } })
+
+    cropStream.on('error', function() {
+      fs.readFile(filepath, function (err) {
+        if (err) {
+          throw err
+        }
+        done()
+      })
+    })
+  })
+
+  it('Corrupted gif should trigger error', function (done) {
+    var filepath = join(tmp, 'broken-image.gif')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.gif'))
       , writeStream = fs.createWriteStream(filepath)
       , cropStream = new CropStream()
 
@@ -238,9 +259,9 @@ describe('CropStream', function() {
           var item = results[0]
             , other = results[1]
 
-          assert.notEqual(item.Format.length, other.Format.length, 'Images frame length the same')
-          assert.deepEqual(item.size, other.size, 'Gifs are not the same size')
-          assert.notDeepEqual(item.Geometry, other.Geometry, 'Gif frames are the same size')
+          assert.notEqual(item.Format.length, other.Format.length, 'Images should not have the same number of frames')
+          assert.deepEqual(item.size, other.size, 'Images should be the same size')
+          assert.notDeepEqual(item.Geometry, other.Geometry, 'Gif frames should not be the same size')
           done()
         })
       })
@@ -273,9 +294,9 @@ describe('CropStream', function() {
           var item = results[0]
             , other = results[1]
 
-          assert.equal(item.Format.length, other.Format.length, 'Gifs do not have the same number of frames')
-          assert.deepEqual(item.size, other.size, 'Gifs are not the same size')
-          assert.deepEqual(item.Geometry, other.Geometry, 'Gif frames are not the same size')
+          assert.equal(item.Format.length, other.Format.length, 'Gifs should have the same number of frames')
+          assert.deepEqual(item.size, other.size, 'Gifs should be the same size')
+          assert.deepEqual(item.Geometry, other.Geometry, 'Gif frames should be the same size')
           done()
         })
       })
