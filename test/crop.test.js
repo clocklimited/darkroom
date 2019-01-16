@@ -7,6 +7,7 @@ var assert = require('assert')
   , rimraf = require('rimraf')
   , fs = require('fs')
   , gm = require('gm')
+  , async = require('async')
 
 describe('CropStream', function() {
 
@@ -28,9 +29,30 @@ describe('CropStream', function() {
     assert(s instanceof DarkroomStream)
   })
 
-  it('Corrupted image should trigger error', function (done) {
+  it('Corrupted png should trigger error', function (done) {
     var filepath = join(tmp, 'broken-image.png')
       , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
+      , writeStream = fs.createWriteStream(filepath)
+      , cropStream = new CropStream()
+
+    readStream.pipe(cropStream).pipe(writeStream
+      , { crop: {
+            w: 400
+          , h: 400 } })
+
+    cropStream.on('error', function() {
+      fs.readFile(filepath, function (err) {
+        if (err) {
+          throw err
+        }
+        done()
+      })
+    })
+  })
+
+  it('Corrupted gif should trigger error', function (done) {
+    var filepath = join(tmp, 'broken-image.gif')
+      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.gif'))
       , writeStream = fs.createWriteStream(filepath)
       , cropStream = new CropStream()
 
@@ -203,6 +225,78 @@ describe('CropStream', function() {
         }
         gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
           assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+
+    it('should not match optimised gif cropped by gm', function (done) {
+      // optimising the mangled gm gif takes time
+      this.timeout(15000);
+      var options = {
+          crop: {
+            w: 100
+          , h: 100
+          , x1: 0
+          , y1: 0
+          }
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'landscape.gif')
+        , out = join(tmp, 'landscape-cropped-gm.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'landscape-gm.gif')
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        async.map([ expectedOut, out ], function (item, cb) {
+          gm(item).identify(function (err, result) {
+            cb(err, result)
+          })
+        }, function (err, results) {
+          var item = results[0]
+            , other = results[1]
+
+          assert.notEqual(item.Format.length, other.Format.length, 'Images should not have the same number of frames')
+          assert.deepEqual(item.size, other.size, 'Images should be the same size')
+          assert.notDeepEqual(item.Geometry, other.Geometry, 'Gif frames should not be the same size')
+          done()
+        })
+      })
+    })
+
+    it('should match gif cropped by gifsicle', function (done) {
+      var options = {
+          crop: {
+            w: 100
+          , h: 100
+          , x1: 0
+          , y1: 0
+          }
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'landscape.gif')
+        , out = join(tmp, 'landscape-cropped-gifsicle.gif')
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'landscape-gifsicle.gif')
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        async.map([ expectedOut, out ], function (item, cb) {
+          gm(item).identify(function (err, result) {
+            cb(err, result)
+          })
+        }, function (err, results) {
+          var item = results[0]
+            , other = results[1]
+
+          assert.equal(item.Format.length, other.Format.length, 'Gifs should have the same number of frames')
+          assert.deepEqual(item.size, other.size, 'Gifs should be the same size')
+          assert.deepEqual(item.Geometry, other.Geometry, 'Gif frames should be the same size')
           done()
         })
       })
