@@ -314,6 +314,138 @@ describe('ResizeStream', function() {
         })
       })
 
+      it('should handle stretching an image using an xx.9 floating point number', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '100x50-stretch-xx.9.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { width: 99.9
+          , height: 49.9
+          , mode: 'stretch'
+          }
+        )
+
+        writeStream.on('close', function() {
+          gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(100)
+            data.size.height.should.equal(50)
+            done()
+          })
+        })
+      })
+
+      it('should handle stretching an image using an xx.5 floating point number', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '100x50-stretch-xx.5.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { width: 99.5
+          , height: 49.5
+          , mode: 'stretch'
+          }
+        )
+
+        writeStream.on('close', function() {
+          gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(100)
+            data.size.height.should.equal(50)
+            done()
+          })
+        })
+      })
+
+      it('should handle stretching an image using an xx.1 floating point number', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '100x50-stretch-xx.1.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { width: 100.1
+          , height: 50.1
+          , mode: 'stretch'
+          }
+        )
+
+        writeStream.on('close', function() {
+          gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(100)
+            data.size.height.should.equal(50)
+            done()
+          })
+        })
+      })
+
+      it('should correctly ‘cover’ to 100x100 using an xx.9 floating point number', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '100x100-cover-landscape-width-and-height-xx.9.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { height: 99.9
+          , width: 99.9
+          , mode: 'cover'
+          }
+        )
+
+        writeStream.on('close', function() {
+           gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(100)
+            data.size.height.should.equal(100)
+            done()
+          })
+        })
+      })
+
+      it('should correctly ‘cover’ to 100x100 using an xx.5 floating point number', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '100x100-cover-landscape-width-and-height-xx.5.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { height: 99.5
+          , width: 99.5
+          , mode: 'cover'
+          }
+        )
+
+        writeStream.on('close', function() {
+           gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(100)
+            data.size.height.should.equal(100)
+            done()
+          })
+        })
+      })
+
+      it('should correctly ‘cover’ to 100x100 using an xx.1 floating point number', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '100x100-cover-landscape-width-and-height-xx.1.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399-24bit.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { height: 100.1
+          , width: 100.1
+          , mode: 'cover'
+          }
+        )
+
+        writeStream.on('close', function() {
+           gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(100)
+            data.size.height.should.equal(100)
+            done()
+          })
+        })
+      })
+
       it('should error if stretch is attempted with only a width', function () {
         resize.chunks.should.have.lengthOf(0)
         var filepath = join(tmp, '100x-should-error.' + format)
