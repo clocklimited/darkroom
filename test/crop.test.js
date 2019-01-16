@@ -29,44 +29,124 @@ describe('CropStream', function() {
     assert(s instanceof DarkroomStream)
   })
 
-  it('Corrupted png should trigger error', function (done) {
-    var filepath = join(tmp, 'broken-image.png')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.png'))
-      , writeStream = fs.createWriteStream(filepath)
-      , cropStream = new CropStream()
+  var formats =  [ 'png', 'gif' ]
+  formats.forEach(function (format) {
+    describe('shared crop tests: ' + format, function () {
+      it('Corrupted image should trigger error', function (done) {
+        var filepath = join(tmp, 'broken-image.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+          , cropStream = new CropStream()
 
-    readStream.pipe(cropStream).pipe(writeStream
-      , { crop: {
-            w: 400
-          , h: 400 } })
+        readStream.pipe(cropStream).pipe(writeStream
+          , { crop: {
+                w: 400
+              , h: 400 } })
 
-    cropStream.on('error', function() {
-      fs.readFile(filepath, function (err) {
-        if (err) {
-          throw err
-        }
-        done()
+        cropStream.on('error', function() {
+          fs.readFile(filepath, function (err) {
+            if (err) {
+              throw err
+            }
+            done()
+          })
+        })
       })
-    })
-  })
 
-  it('Corrupted gif should trigger error', function (done) {
-    var filepath = join(tmp, 'broken-image.gif')
-      , readStream = fs.createReadStream(join(__dirname, 'fixtures', 'broken-image.gif'))
-      , writeStream = fs.createWriteStream(filepath)
-      , cropStream = new CropStream()
-
-    readStream.pipe(cropStream).pipe(writeStream
-      , { crop: {
-            w: 400
-          , h: 400 } })
-
-    cropStream.on('error', function() {
-      fs.readFile(filepath, function (err) {
-        if (err) {
-          throw err
+      it('Should handle crop of xx.9', function (done) {
+        var options = {
+          crop: {
+            w: 89.9
+          , h: 79.9
+          , x1: 99.9
+          , y1: 29.9
+          }
+        , gravity: 'NorthWest'
         }
-        done()
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'test-pattern.' + format)
+        , out = join(tmp, 'test-pattern-test-xx.9.' + format)
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'test-pattern-cropped.' + format)
+
+        readStream.pipe(image).pipe(writeStream, options)
+
+        writeStream.on('close', function () {
+          var options =
+          { file: join(tmp, 'test-pattern-test-diff-xx.9.' + format)
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+          gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+            assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+            done()
+          })
+        })
+      })
+
+      it('Should handle crop of xx.5', function (done) {
+        var options = {
+          crop: {
+            w: 89.5
+          , h: 79.5
+          , x1: 99.5
+          , y1: 29.5
+          }
+        , gravity: 'NorthWest'
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'test-pattern.' + format)
+        , out = join(tmp, 'test-pattern-test-xx.5.' + format)
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'test-pattern-cropped-xx.5.' + format)
+
+        readStream.pipe(image).pipe(writeStream, options)
+
+        writeStream.on('close', function () {
+          var options =
+          { file: join(tmp, 'test-pattern-test-diff-xx.5.' + format)
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+          gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+            assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+            done()
+          })
+        })
+      })
+
+      it('Should handle crop of xx.1', function (done) {
+        var options = {
+          crop: {
+            w: 90.1
+          , h: 80.1
+          , x1: 100.1
+          , y1: 30.1
+          }
+        , gravity: 'NorthWest'
+        }
+        , image = new CropStream()
+        , input = join(__dirname, 'fixtures', 'test-pattern.' + format)
+        , out = join(tmp, 'test-pattern-test-xx.1.' + format)
+        , readStream = fs.createReadStream(input)
+        , writeStream = fs.createWriteStream(out)
+        , expectedOut = join(__dirname, 'fixtures', 'test-pattern-cropped.' + format)
+
+        readStream.pipe(image).pipe(writeStream, options)
+
+        writeStream.on('close', function () {
+          var options =
+          { file: join(tmp, 'test-pattern-test-diff-xx.1.' + format)
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+          gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
+            assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+            done()
+          })
+        })
       })
     })
   })
