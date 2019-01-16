@@ -8,7 +8,6 @@ var assert = require('assert')
   , fs = require('fs')
   , gm = require('gm')
   , imageType = require('image-type')
-  , max = require('lodash.max')
   , async = require('async')
 
 describe('CircleStream', function() {
@@ -142,8 +141,13 @@ describe('CircleStream', function() {
         var counts = file.toString().split('\n')
           .map(getColour)
           .reduce(countColours, {})
-
-        assert.equal(max(counts, 'count').colour, colour)
+          , maxColour = Object.keys(counts).reduce(function (max, key) {
+            if (counts[key].count > max) {
+              max = key
+            }
+            return max
+          })
+        assert.equal(maxColour, colour)
         return done()
       })
     }
