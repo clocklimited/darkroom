@@ -548,6 +548,68 @@ describe('ResizeStream', function() {
     })
   })
 
+  describe('resizing from png', function () {
+    it('should keep images lossless which were orginally pngs', function (done) {
+      resize.chunks.should.have.lengthOf(0)
+      var filePath = join(tmp, 'iamlosslesswebp')
+        , inputfile = join(__dirname, 'fixtures', '500x399-24bit.png')
+        , expectedOutput = join(__dirname, 'fixtures', '500x399-24bit-resized-lossless.webp')
+        , readStream = fs.createReadStream(inputfile)
+        , writeStream = fs.createWriteStream(filePath)
+        , format = 'WEBP'
+
+      readStream.pipe(resize).pipe(writeStream
+      , { width: 500
+        , height: 399
+        , format: format
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, '500x399-24bit-resized-lossless-diff.webp')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+        gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+  })
+
+  describe('resizing to webp', function () {
+    it('should create a lossy webp', function (done) {
+      resize.chunks.should.have.lengthOf(0)
+      var filePath = join(tmp, 'iamlossywebp')
+        , inputfile = join(__dirname, 'fixtures', '500x399-8bit.jpeg')
+        , expectedOutput = join(__dirname, 'fixtures', '500x399-8bit-resized-lossy.webp')
+        , readStream = fs.createReadStream(inputfile)
+        , writeStream = fs.createWriteStream(filePath)
+        , format = 'WEBP'
+
+      readStream.pipe(resize).pipe(writeStream
+      , { width: 500
+        , height: 399
+        , format: format
+        }
+      )
+
+      writeStream.on('close', function() {
+        var options =
+          { file: join(tmp, '500x399-24bit-resized-lossly-diff.webp')
+          , tolerance: 0.001
+          , highlightColor: 'yellow'
+          }
+        gm.compare(filePath, expectedOutput, options, function(err, isEqual, equality, raw) {
+          assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+          done()
+        })
+      })
+    })
+  })
+
   describe('gif resizing', function () {
     it('should correctly cover resize animated gifs', function (done) {
       var input = join(__dirname, 'fixtures', 'animated.gif')
