@@ -1,6 +1,6 @@
 {
   "name": "verydarkroom",
-  "version": "4.6.1",
+  "version": "4.7.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
   "dependencies": {
