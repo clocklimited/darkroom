@@ -5,5 +5,11 @@ node_js:
   - 8
   - 10
 
+dist: xenial
+
 before_install:
-  - sudo apt-get install graphicsmagick gifsicle
+  - sudo add-apt-repository ppa:rwky/graphicsmagick -y
+  - sudo apt-get update -q
+  - sudo apt-get install graphicsmagick=1.3.31-rwky2~xenial
+  - curl http://archive.ubuntu.com/ubuntu/pool/universe/g/gifsicle/gifsicle_1.91-2_amd64.deb > gifsicle.deb
+  - sudo dpkg -i gifsicle.deb
