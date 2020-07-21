@@ -11,6 +11,8 @@ not work due to this [#36](https://github.com/clocklimited/Darkroom-api/issues/3
 
 v4 will not work well with GraphicsMagick pre 1.3.18
 
+v4.7.0 requires 1.3.26+ to fixed issues with GM not identifying some gifs.
+
 ### Mac OS 
 
     brew install graphicsmagick
