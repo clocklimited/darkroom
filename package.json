@@ -1,5 +1,5 @@
 {
-  "name": "darkroom",
+  "name": "@clocklimited/darkroom",
   "version": "5.0.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
@@ -32,9 +32,18 @@
     "type": "git",
     "url": "git://github.com/clocklimited/darkroom.git"
   },
-  "author": [
-    "Kuba Stawiarski",
-    "Paul Serby"
-  ],
-  "license": "New BSD"
+  "author": "Clock",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/clocklimited/darkroom/issues"
+  },
+  "homepage": "https://github.com/clocklimited/darkroom#readme",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "keywords": [
+    "image",
+    "manipulation"
+  ]
 }
