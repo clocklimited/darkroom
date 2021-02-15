@@ -447,6 +447,39 @@ describe('ResizeStream', function() {
         })
       })
 
+      it('should correctly ‘fill’ to 200x200', function (done) {
+        if (format === 'gif') return done()
+        resize.chunks.should.have.lengthOf(0)
+        var filepath = join(tmp, '500x399-fill.' + format)
+          , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.' + format))
+          , writeStream = fs.createWriteStream(filepath)
+          , expectedOutput = join(__dirname, 'fixtures', '500x399-fill.' + format)
+
+        readStream.pipe(resize).pipe(writeStream
+        , { height: 200
+          , width: 200
+          , mode: 'fill'
+          }
+        )
+
+        writeStream.on('close', function() {
+           gm(filepath).identify(function (err, data) {
+            data.size.width.should.equal(200)
+            data.size.height.should.equal(200)
+            var options =
+            { file: join(tmp, '500x399-fill-diff.' + format)
+            , tolerance: 0.001
+            , highlightColor: 'yellow'
+            }
+
+            gm.compare(filepath, expectedOutput, options, function(err, isEqual, equality, raw) {
+              assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+              done()
+            })
+          })
+        })
+      })
+
       it('should error if stretch is attempted with only a width', function () {
         resize.chunks.should.have.lengthOf(0)
         var filepath = join(tmp, '100x-should-error.' + format)
