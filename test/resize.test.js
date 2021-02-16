@@ -447,18 +447,18 @@ describe('ResizeStream', function() {
         })
       })
 
-      it('should correctly ‘fill’ to 200x200', function (done) {
+      it('should correctly ‘pad’ to 200x200', function (done) {
         if (format === 'gif') return done()
         resize.chunks.should.have.lengthOf(0)
-        var filepath = join(tmp, '500x399-fill.' + format)
+        var filepath = join(tmp, '500x399-pad.' + format)
           , readStream = fs.createReadStream(join(__dirname, 'fixtures', '500x399.' + format))
           , writeStream = fs.createWriteStream(filepath)
-          , expectedOutput = join(__dirname, 'fixtures', '500x399-fill.' + format)
+          , expectedOutput = join(__dirname, 'fixtures', '500x399-pad.' + format)
 
         readStream.pipe(resize).pipe(writeStream
         , { height: 200
           , width: 200
-          , mode: 'fill'
+          , mode: 'pad'
           }
         )
 
@@ -467,7 +467,7 @@ describe('ResizeStream', function() {
             data.size.width.should.equal(200)
             data.size.height.should.equal(200)
             var options =
-            { file: join(tmp, '500x399-fill-diff.' + format)
+            { file: join(tmp, '500x399-pad-diff.' + format)
             , tolerance: 0.001
             , highlightColor: 'yellow'
             }
