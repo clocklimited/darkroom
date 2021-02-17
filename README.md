@@ -1,5 +1,7 @@
 # darkroom
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/clocklimited/darkroom.svg)](https://greenkeeper.io/)
+
 An image manipulation library.
 
 ## Installation
