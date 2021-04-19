@@ -3,6 +3,7 @@
   "version": "5.1.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
+  "files": ["./darkroom.js", "./lib/"],
   "dependencies": {
     "async": "^2.6.1",
     "file-type": "^10.7.0",
