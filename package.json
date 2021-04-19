@@ -27,7 +27,8 @@
     "pretest": "npm run lint",
     "test": "istanbul cover _mocha -- -r should",
     "testonly": "istanbul cover _mocha -- -r should",
-    "posttest": "istanbul check-coverage --statements 60 --branches 50 --functions 60 --lines 60 && rm -rf coverage"
+    "posttest": "istanbul check-coverage --statements 60 --branches 50 --functions 60 --lines 60 && rm -rf coverage",
+    "run-test": "mocha @a"
   },
   "repository": {
     "type": "git",
