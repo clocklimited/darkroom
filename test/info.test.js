@@ -22,6 +22,7 @@ describe('InfoStream', function () {
     info.on('error', done)
     info.on('end', done)
 
+    // TODO validate what this outputs
     readStream.pipe(info).pipe(process.stdout)
   })
 })
