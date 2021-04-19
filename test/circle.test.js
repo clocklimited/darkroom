@@ -41,10 +41,10 @@ describe('CircleStream', function () {
     writeStream.on('close', function () {
       getImageSize(input, function (err, size) {
         if (err) return done(err)
-        assert.equal(circle.options.x0, size.width / 2)
-        assert.equal(circle.options.y0, size.height / 2)
-        assert.equal(circle.options.x1, size.width * 0.8)
-        assert.equal(circle.options.y1, size.height * 0.8)
+        assert.strictEqual(circle.options.x0, size.width / 2)
+        assert.strictEqual(circle.options.y0, size.height / 2)
+        assert.strictEqual(circle.options.x1, size.width * 0.8)
+        assert.strictEqual(circle.options.y1, size.height * 0.8)
         done()
       })
     })
@@ -73,7 +73,8 @@ describe('CircleStream', function () {
         [getImageSize.bind(null, input), getImageSize.bind(null, out)],
         function (err, results) {
           if (err) return done(err)
-          assert.deepEqual(results[0], results[1])
+          assert.deepStrictEqual(results[0], results[1])
+
           return done()
         }
       )
@@ -102,7 +103,7 @@ describe('CircleStream', function () {
         expectedOut,
         options,
         function (err, isEqual, equality, raw) {
-          assert.equal(
+          assert.strictEqual(
             isEqual,
             true,
             'Images do not match see ‘' + options.file + '’ for a diff.\n' + raw
@@ -125,7 +126,7 @@ describe('CircleStream', function () {
     writeStream.on('close', function () {
       fs.readdir(circle.tempDir, (error) => {
         assert.ok(error instanceof Error, 'Temporary files left over')
-        assert.equal(error.code, 'ENOENT', 'Temporary files left over')
+        assert.strictEqual(error.code, 'ENOENT', 'Temporary files left over')
         done()
       })
     })
@@ -149,7 +150,7 @@ describe('CircleStream', function () {
     readStream.pipe(circle).pipe(writeStream)
 
     function assertFileType(file) {
-      return assert.equal(imageType(file).ext, 'jpg')
+      return assert.strictEqual(imageType(file).ext, 'jpg')
     }
 
     function getColour(line) {
@@ -180,7 +181,7 @@ describe('CircleStream', function () {
             }
             return max
           })
-        assert.equal(maxColour, colour)
+        assert.strictEqual(maxColour, colour)
         return done()
       })
     }

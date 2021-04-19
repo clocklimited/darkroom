@@ -478,7 +478,7 @@ describe('ResizeStream', function () {
               expectedOutput,
               options,
               function (err, isEqual, equality, raw) {
-                assert.equal(
+                assert.strictEqual(
                   isEqual,
                   true,
                   'Images do not match see ‘' +
@@ -628,7 +628,11 @@ describe('ResizeStream', function () {
         getWebpInfo
           .from(filePath)
           .then(function (info) {
-            assert.equal(info.summary.isLossless, false, 'File is not lossless')
+            assert.strictEqual(
+              info.summary.isLossless,
+              false,
+              'File is not lossless'
+            )
             done()
           })
           .catch(done)
@@ -666,7 +670,7 @@ describe('ResizeStream', function () {
           expectedOutput,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -709,7 +713,7 @@ describe('ResizeStream', function () {
           expectedOutput,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -749,7 +753,7 @@ describe('ResizeStream', function () {
           expectedOutput,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -792,7 +796,7 @@ describe('ResizeStream', function () {
           expectedOutput,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -835,7 +839,7 @@ describe('ResizeStream', function () {
               other.size,
               'Gifs should not match in size'
             )
-            assert.equal(
+            assert.strictEqual(
               item.Format.length,
               other.Format.length,
               'Both gifs should have the same number of frames'
@@ -877,7 +881,7 @@ describe('ResizeStream', function () {
           expectedOutput,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +

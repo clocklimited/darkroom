@@ -27,7 +27,7 @@ describe('InfoStream', function () {
       .pipe(info)
       .pipe(
         streamAssert.first((data) =>
-          assert.equal(data.toString(), '{"width":1500,"height":843}')
+          assert.strictEqual(data.toString(), '{"width":1500,"height":843}')
         )
       )
       .pipe(streamAssert.end(done))

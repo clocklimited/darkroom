@@ -90,7 +90,7 @@ describe('CropStream', function () {
             expectedOut,
             options,
             function (err, isEqual, equality, raw) {
-              assert.equal(
+              assert.strictEqual(
                 isEqual,
                 true,
                 'Images do not match see ‘' +
@@ -138,7 +138,7 @@ describe('CropStream', function () {
             expectedOut,
             options,
             function (err, isEqual, equality, raw) {
-              assert.equal(
+              assert.strictEqual(
                 isEqual,
                 true,
                 'Images do not match see ‘' +
@@ -186,7 +186,7 @@ describe('CropStream', function () {
             expectedOut,
             options,
             function (err, isEqual, equality, raw) {
-              assert.equal(
+              assert.strictEqual(
                 isEqual,
                 true,
                 'Images do not match see ‘' +
@@ -231,7 +231,7 @@ describe('CropStream', function () {
           expectedOut,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -279,7 +279,7 @@ describe('CropStream', function () {
           expectedOut,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -325,7 +325,7 @@ describe('CropStream', function () {
           expectedOut,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -371,7 +371,7 @@ describe('CropStream', function () {
           expectedOut,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -415,7 +415,7 @@ describe('CropStream', function () {
           expectedOut,
           options,
           function (err, isEqual, equality, raw) {
-            assert.equal(
+            assert.strictEqual(
               isEqual,
               true,
               'Images do not match see ‘' +
@@ -466,7 +466,7 @@ describe('CropStream', function () {
               other.Format.length,
               'Images should not have the same number of frames'
             )
-            assert.deepEqual(
+            assert.deepStrictEqual(
               item.size,
               other.size,
               'Images should be the same size'
@@ -512,17 +512,17 @@ describe('CropStream', function () {
             var item = results[0],
               other = results[1]
 
-            assert.equal(
+            assert.strictEqual(
               item.Format.length,
               other.Format.length,
               'Gifs should have the same number of frames'
             )
-            assert.deepEqual(
+            assert.deepStrictEqual(
               item.size,
               other.size,
               'Gifs should be the same size'
             )
-            assert.deepEqual(
+            assert.deepStrictEqual(
               item.Geometry,
               other.Geometry,
               'Gif frames should be the same size'

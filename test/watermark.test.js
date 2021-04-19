@@ -102,7 +102,7 @@ describe('WatermarkStream', function () {
               expectedOutput,
               options,
               function (err, isEqual, equality, raw) {
-                assert.equal(
+                assert.strictEqual(
                   isEqual,
                   true,
                   'Images do not match see ‘' +
@@ -150,7 +150,7 @@ describe('WatermarkStream', function () {
               expectedOutput,
               options,
               function (err, isEqual, equality, raw) {
-                assert.equal(
+                assert.strictEqual(
                   isEqual,
                   true,
                   'Images do not match see ‘' +
