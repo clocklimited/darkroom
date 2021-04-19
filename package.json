@@ -3,7 +3,10 @@
   "version": "5.1.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
-  "files": ["./darkroom.js", "./lib/"],
+  "files": [
+    "./darkroom.js",
+    "./lib/"
+  ],
   "dependencies": {
     "async": "^2.6.1",
     "file-type": "^10.7.0",
@@ -21,7 +24,8 @@
     "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
     "prettier": "^2.2.1",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "stream-assert": "^2.0.3"
   },
   "scripts": {
     "lint": "eslint -f unix .",

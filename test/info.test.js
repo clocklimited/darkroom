@@ -1,6 +1,8 @@
 var Info = require('../lib/info'),
   join = require('path').join,
-  fs = require('fs')
+  fs = require('fs'),
+  assert = require('assert'),
+  streamAssert = require('stream-assert')
 
 describe('InfoStream', function () {
   it('should work with this specific image that was failing with gm@1.19.0', function (done) {
@@ -20,9 +22,27 @@ describe('InfoStream', function () {
       info = new Info()
 
     info.on('error', done)
-    info.on('end', done)
 
-    // TODO validate what this outputs
-    readStream.pipe(info).pipe(process.stdout)
+    readStream
+      .pipe(info)
+      .pipe(
+        streamAssert.first((data) =>
+          assert.equal(data.toString(), '{"width":1500,"height":843}')
+        )
+      )
+      .pipe(streamAssert.end(done))
+  })
+
+  it('should trigger error with a corrupted image', function (done) {
+    var readStream = fs.createReadStream(
+        join(__dirname, 'fixtures', 'broken-image.png')
+      ),
+      info = new Info()
+
+    readStream.pipe(info)
+
+    info.on('error', function () {
+      done()
+    })
   })
 })
