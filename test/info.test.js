@@ -33,6 +33,26 @@ describe('InfoStream', function () {
       .pipe(streamAssert.end(done))
   })
 
+  it('should report orientation correctly', function (done) {
+    var input = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg'),
+      readStream = fs.createReadStream(input),
+      info = new Info()
+
+    info.on('error', done)
+
+    readStream
+      .pipe(info)
+      .pipe(
+        streamAssert.first((data) =>
+          assert.strictEqual(
+            data.toString(),
+            '{"height":884,"width":720,"orientation":true}'
+          )
+        )
+      )
+      .pipe(streamAssert.end(done))
+  })
+
   it('should trigger error with a corrupted image', function (done) {
     var readStream = fs.createReadStream(
         join(__dirname, 'fixtures', 'broken-image.png')
