@@ -1,14 +1,14 @@
-var stream = require('stream')
-  , assert = require('assert')
+var stream = require('stream'),
+  assert = require('assert')
 
 module.exports = function (streamToTest) {
-  var source = new stream.Stream()
-    , dest = new stream.Stream()
+  var source = new stream.Stream(),
+    dest = new stream.Stream()
 
   source.readable = true
   dest.writable = true
 
-  streamToTest.on('error', function() {})
+  streamToTest.on('error', function () {})
 
   source.pipe(streamToTest)
 
