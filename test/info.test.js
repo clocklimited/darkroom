@@ -1,8 +1,8 @@
-var Info = require('../lib/info'),
-  join = require('path').join,
-  fs = require('fs'),
-  assert = require('assert'),
-  streamAssert = require('stream-assert')
+const Info = require('../lib/info')
+const { join } = require('path')
+const fs = require('fs')
+const assert = require('assert')
+const streamAssert = require('stream-assert')
 
 describe('InfoStream', function () {
   it('should work with this specific image that was failing with gm@1.19.0', function (done) {
@@ -17,9 +17,9 @@ describe('InfoStream', function () {
     //
     // This test fails when gm@1.19.0 is used, and passes with gm@>1.19.
 
-    var input = join(__dirname, 'fixtures', 'gm-1.19-does-not-like.jpg'),
-      readStream = fs.createReadStream(input),
-      info = new Info()
+    const input = join(__dirname, 'fixtures', 'gm-1.19-does-not-like.jpg')
+    const readStream = fs.createReadStream(input)
+    const info = new Info()
 
     info.on('error', done)
 
@@ -34,9 +34,9 @@ describe('InfoStream', function () {
   })
 
   it('should report orientation correctly', function (done) {
-    var input = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg'),
-      readStream = fs.createReadStream(input),
-      info = new Info()
+    const input = join(__dirname, 'fixtures', 'oriented-right-in-exif.jpeg')
+    const readStream = fs.createReadStream(input)
+    const info = new Info()
 
     info.on('error', done)
 
@@ -54,10 +54,10 @@ describe('InfoStream', function () {
   })
 
   it('should trigger error with a corrupted image', function (done) {
-    var readStream = fs.createReadStream(
-        join(__dirname, 'fixtures', 'broken-image.png')
-      ),
-      info = new Info()
+    const readStream = fs.createReadStream(
+      join(__dirname, 'fixtures', 'broken-image.png')
+    )
+    const info = new Info()
 
     readStream.pipe(info)
 

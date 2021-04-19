@@ -1,5 +1,5 @@
-var darkroom = require('..'),
-  assert = require('assert')
+const darkroom = require('..')
+const assert = require('assert')
 
 describe('darkroom', function () {
   it('should have correct interface', function () {
