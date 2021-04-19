@@ -113,6 +113,24 @@ describe('CircleStream', function () {
     })
   })
 
+  it('should clean up the temporary directory', function (done) {
+    var circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 }),
+      out = join(tmp, 'bill-circle-test.png'),
+      input = join(__dirname, 'fixtures', 'bill-progressive.jpeg'),
+      readStream = fs.createReadStream(input),
+      writeStream = fs.createWriteStream(out)
+
+    readStream.pipe(circle).pipe(writeStream)
+
+    writeStream.on('close', function () {
+      fs.readdir(circle.tempDir, (error) => {
+        assert.ok(error instanceof Error, 'Temporary files left over')
+        assert.equal(error.code, 'ENOENT', 'Temporary files left over')
+        done()
+      })
+    })
+  })
+
   it('should save as a jpg if background colour is given', function (done) {
     var colour = '#0166FF',
       circle = new CircleStream({
