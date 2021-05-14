@@ -82,6 +82,21 @@ describe('BlurStream', function () {
     })
   })
 
+  it('should handle an incorrect mask format', function (done) {
+    const blur = new BlurStream({ masks: ['lmao'] })
+    const out = join(tmp, '500x399-blurred-full.png')
+    const input = join(__dirname, 'fixtures', '500x399.jpeg')
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
+
+    readStream.pipe(blur).pipe(writeStream)
+
+    blur.on('error', function (err) {
+      assert(err, 'Did Error')
+      done()
+    })
+  })
+
   it('should pixellate a 100x100 square', function (done) {
     const blur = new BlurStream({
       masks: [
