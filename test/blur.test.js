@@ -84,7 +84,7 @@ describe('BlurStream', function () {
 
   it('should handle an incorrect mask format', function (done) {
     const blur = new BlurStream({ masks: ['lmao'] })
-    const out = join(tmp, '500x399-blurred-full.png')
+    const out = join(tmp, '500x399-blurred-error.png')
     const input = join(__dirname, 'fixtures', '500x399.jpeg')
     const readStream = fs.createReadStream(input)
     const writeStream = fs.createWriteStream(out)
