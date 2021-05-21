@@ -10,7 +10,6 @@ let tmp
 
 describe('BlurStream', function () {
   before(function (done) {
-    this.timeout(5000)
     temp.mkdir('blur-test', function (err, path) {
       if (err) return done(err)
       tmp = path
@@ -61,6 +60,7 @@ describe('BlurStream', function () {
   })
 
   it('should blur the whole image', function (done) {
+    this.timeout(5000)
     const blur = new BlurStream({ method: 'blur' })
     const out = join(tmp, '500x399-gauss-blurred-full.png')
     const input = join(__dirname, 'fixtures', '500x399.jpeg')
@@ -160,6 +160,7 @@ describe('BlurStream', function () {
   })
 
   it('should blur a 100x100 square', function (done) {
+    this.timeout(5000)
     const blur = new BlurStream({
       masks: [
         [
