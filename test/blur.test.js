@@ -10,6 +10,7 @@ let tmp
 
 describe('BlurStream', function () {
   before(function (done) {
+    this.timeout(5000)
     temp.mkdir('blur-test', function (err, path) {
       if (err) return done(err)
       tmp = path
