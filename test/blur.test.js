@@ -61,7 +61,7 @@ describe('BlurStream', function () {
 
   it('should blur the whole image', function (done) {
     this.timeout(5000)
-    const blur = new BlurStream({ method: 'blur' })
+    const blur = new BlurStream({ method: 'gaussian' })
     const out = join(tmp, '500x399-gauss-blurred-full.png')
     const input = join(__dirname, 'fixtures', '500x399.jpeg')
     const readStream = fs.createReadStream(input)
@@ -170,7 +170,7 @@ describe('BlurStream', function () {
           [100, 0]
         ]
       ],
-      method: 'blur'
+      method: 'gaussian'
     })
     const input = join(__dirname, 'fixtures', '500x399.jpeg')
 
