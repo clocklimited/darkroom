@@ -1,19 +1,18 @@
-var assert = require('assert')
-  , CircleStream = require('../lib/circle')
-  , DarkroomStream = require('../lib/darkroom-stream')
-  , join = require('path').join
-  , tmp
-  , temp = require('temp')
-  , rimraf = require('rimraf')
-  , fs = require('fs')
-  , gm = require('gm')
-  , imageType = require('image-type')
-  , async = require('async')
+const assert = require('assert')
+const CircleStream = require('../lib/circle')
+const DarkroomStream = require('../lib/darkroom-stream')
+const { join } = require('path')
+const temp = require('temp')
+const rimraf = require('rimraf')
+const fs = require('fs')
+const gm = require('gm')
+const imageType = require('image-type')
+const async = require('async')
+let tmp
 
-describe('CircleStream', function() {
-
+describe('CircleStream', function () {
   before(function (done) {
-    temp.mkdir('circle-test', function(err, path) {
+    temp.mkdir('circle-test', function (err, path) {
       if (err) return done(err)
       tmp = path
       done()
@@ -27,11 +26,11 @@ describe('CircleStream', function() {
   })
 
   it('should default circle dimensions as a best guess size', function (done) {
-    var circle = new CircleStream()
-      , out = join(tmp, 'bill-circle-test-guess-size.png')
-      , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(out)
+    const circle = new CircleStream()
+    const out = join(tmp, 'bill-circle-test-guess-size.png')
+    const input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
 
     readStream.pipe(circle).pipe(writeStream)
 
@@ -42,26 +41,26 @@ describe('CircleStream', function() {
     writeStream.on('close', function () {
       getImageSize(input, function (err, size) {
         if (err) return done(err)
-        assert.equal(circle.options.x0, size.width / 2)
-        assert.equal(circle.options.y0, size.height / 2)
-        assert.equal(circle.options.x1, size.width * 0.8)
-        assert.equal(circle.options.y1, size.height * 0.8)
+        assert.strictEqual(circle.options.x0, size.width / 2)
+        assert.strictEqual(circle.options.y0, size.height / 2)
+        assert.strictEqual(circle.options.x1, size.width * 0.8)
+        assert.strictEqual(circle.options.y1, size.height * 0.8)
         done()
       })
     })
   })
 
   it('should be a DarkroomStream', function () {
-    var s = new CircleStream({ x0: 100, y0: 100, x1: 100, y1: 100 })
+    const s = new CircleStream({ x0: 100, y0: 100, x1: 100, y1: 100 })
     assert(s instanceof DarkroomStream)
   })
 
   it('should return an image of the same size', function (done) {
-    var circle = new CircleStream({ x0: 100, y0: 100, x1: 100, y1: 100 })
-      , out = join(tmp, 'bill-circle-test.png')
-      , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(out)
+    const circle = new CircleStream({ x0: 100, y0: 100, x1: 100, y1: 100 })
+    const out = join(tmp, 'bill-circle-test.png')
+    const input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
 
     readStream.pipe(circle).pipe(writeStream)
 
@@ -71,54 +70,87 @@ describe('CircleStream', function() {
 
     writeStream.on('close', function () {
       async.parallel(
-        [ getImageSize.bind(null, input)
-        , getImageSize.bind(null, out)
-        ], function (err, results) {
-        if (err) return done(err)
-        assert.deepEqual(results[0], results[1])
-        return done()
-      })
-    })
+        [getImageSize.bind(null, input), getImageSize.bind(null, out)],
+        function (err, results) {
+          if (err) return done(err)
+          assert.deepStrictEqual(results[0], results[1])
 
+          return done()
+        }
+      )
+    })
   })
 
   it('should return with a circular image', function (done) {
-    var circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 })
-      , out = join(tmp, 'bill-circle-test.png')
-      , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(out)
-      , expectedOut = join(__dirname, 'fixtures', 'bill-circle.png')
+    const circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 })
+    const out = join(tmp, 'bill-circle-test.png')
+    const input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
+    const expectedOut = join(__dirname, 'fixtures', 'bill-circle.png')
 
     readStream.pipe(circle).pipe(writeStream)
 
     writeStream.on('close', function () {
-      var options =
-        { file: join(tmp, 'bill-circle-test-diff.png')
-        , tolerance: 0.001
-        , highlightColor: 'yellow'
-        }
+      const options = {
+        file: join(tmp, 'bill-circle-test-diff.png'),
+        tolerance: 0.001,
+        highlightColor: 'yellow'
+      }
 
-      gm.compare(out, expectedOut, options, function(err, isEqual, equality, raw) {
-        assert.equal(isEqual, true, 'Images do not match see ‘' +  options.file + '’ for a diff.\n' + raw)
+      gm.compare(
+        out,
+        expectedOut,
+        options,
+        function (err, isEqual, equality, raw) {
+          assert.strictEqual(
+            isEqual,
+            true,
+            'Images do not match see ‘' + options.file + '’ for a diff.\n' + raw
+          )
+          done()
+        }
+      )
+    })
+  })
+
+  it('should clean up the temporary directory', function (done) {
+    const circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320 })
+    const out = join(tmp, 'bill-circle-test.png')
+    const input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
+
+    readStream.pipe(circle).pipe(writeStream)
+
+    writeStream.on('close', function () {
+      fs.readdir(circle.tempDir, (error) => {
+        assert.ok(error instanceof Error, 'Temporary files left over')
+        assert.strictEqual(error.code, 'ENOENT', 'Temporary files left over')
         done()
       })
     })
   })
 
   it('should save as a jpg if background colour is given', function (done) {
-    var colour = '#0166FF'
-      , circle = new CircleStream({ x0: 250, y0: 200, x1: 400, y1: 320, colour: colour })
-      , out = join(tmp, 'bill-circle-test.jpg')
-      , input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
-      , readStream = fs.createReadStream(input)
-      , writeStream = fs.createWriteStream(out)
-      , histogramPath = join(tmp, 'histogram.txt')
+    const colour = '#0166FF'
+    const circle = new CircleStream({
+      x0: 250,
+      y0: 200,
+      x1: 400,
+      y1: 320,
+      colour: colour
+    })
+    const out = join(tmp, 'bill-circle-test.jpg')
+    const input = join(__dirname, 'fixtures', 'bill-progressive.jpeg')
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
+    const histogramPath = join(tmp, 'histogram.txt')
 
     readStream.pipe(circle).pipe(writeStream)
 
     function assertFileType(file) {
-      return assert.equal(imageType(file).ext, 'jpg')
+      return assert.strictEqual(imageType(file).ext, 'jpg')
     }
 
     function getColour(line) {
@@ -138,22 +170,26 @@ describe('CircleStream', function() {
       if (err) return done(err)
       fs.readFile(histogramPath, function (err, file) {
         if (err) return done(err)
-        var counts = file.toString().split('\n')
+        const counts = file
+          .toString()
+          .split('\n')
           .map(getColour)
           .reduce(countColours, {})
-          , maxColour = Object.keys(counts).reduce(function (max, key) {
-            if (counts[key].count > max) {
-              max = key
-            }
-            return max
-          })
-        assert.equal(maxColour, colour)
+        const maxColour = Object.keys(counts).reduce(function (max, key) {
+          if (counts[key].count > max) {
+            max = key
+          }
+          return max
+        })
+        assert.strictEqual(maxColour, colour)
         return done()
       })
     }
 
     function createImageHistogram() {
-      return gm(out).command('convert').write(histogramPath, assertMainImageColour)
+      return gm(out)
+        .command('convert')
+        .write(histogramPath, assertMainImageColour)
     }
 
     writeStream.on('close', function () {
