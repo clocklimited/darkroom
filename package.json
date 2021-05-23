@@ -6,10 +6,6 @@
   "engines": {
     "node": ">=10"
   },
-  "files": [
-    "./darkroom.js",
-    "./lib"
-  ],
   "dependencies": {
     "async": "^2.6.1",
     "file-type": "^10.7.0",
