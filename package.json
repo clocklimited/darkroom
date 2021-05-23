@@ -8,7 +8,7 @@
   },
   "files": [
     "./darkroom.js",
-    "./lib/"
+    "./lib"
   ],
   "dependencies": {
     "async": "^2.6.1",
