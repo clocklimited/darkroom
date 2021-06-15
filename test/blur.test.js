@@ -8,7 +8,7 @@ const fs = require('fs')
 const gm = require('gm')
 let tmp
 
-describe.only('BlurStream', function () {
+describe('BlurStream', function () {
   before(function (done) {
     temp.mkdir('blur-test', function (err, path) {
       if (err) return done(err)
