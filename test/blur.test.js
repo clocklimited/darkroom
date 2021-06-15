@@ -8,7 +8,7 @@ const fs = require('fs')
 const gm = require('gm')
 let tmp
 
-describe('BlurStream', function () {
+describe.only('BlurStream', function () {
   before(function (done) {
     temp.mkdir('blur-test', function (err, path) {
       if (err) return done(err)
@@ -262,6 +262,76 @@ describe('BlurStream', function () {
         if (err) return done(err)
         assert.strictEqual(size.width, 500)
         assert.strictEqual(size.height, 399)
+
+        const options = {
+          file: join(tmp, '500x399-pixel-multi-portion-diff.png'),
+          tolerance: 0.001,
+          highlightColor: 'yellow'
+        }
+
+        gm.compare(
+          out,
+          expectedOutput,
+          options,
+          function (err, isEqual, equality, raw) {
+            assert.strictEqual(
+              isEqual,
+              true,
+              'Images do not match see ‘' +
+                options.file +
+                '’ for a diff.\n' +
+                raw
+            )
+            done()
+          }
+        )
+      })
+    })
+  })
+
+  it('should pixellate a square and a triangle on a large image', function (done) {
+    const blur = new BlurStream({
+      masks: [
+        [
+          [0, 0],
+          [0, 500],
+          [500, 500],
+          [500, 0]
+        ],
+
+        [
+          [1300, 800],
+          [1400, 800],
+          [1350, 1300]
+        ]
+      ]
+    })
+
+    const input = join(__dirname, 'fixtures', 'massive-image.jpg')
+
+    const out = join(tmp, 'massive-image-output.png')
+    const expectedOutput = join(
+      __dirname,
+      'fixtures',
+      'massive-image-output.png'
+    )
+
+    const readStream = fs.createReadStream(input)
+    const writeStream = fs.createWriteStream(out)
+
+    readStream.pipe(blur).pipe(writeStream)
+
+    function getImageSize(img, cb) {
+      return gm(img).size(cb)
+    }
+
+    this.timeout(10000)
+
+    writeStream.on('close', function () {
+      getImageSize(input, function (err, size) {
+        if (err) return done(err)
+        assert.strictEqual(size.width, 3024)
+        assert.strictEqual(size.height, 2016)
 
         const options = {
           file: join(tmp, '500x399-pixel-multi-portion-diff.png'),
