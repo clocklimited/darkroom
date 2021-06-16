@@ -36,30 +36,7 @@ describe('BlurStream', function () {
     assert(s instanceof DarkroomStream)
   })
 
-  it('should default to pixelate the whole image', function (done) {
-    const blur = new BlurStream()
-    const out = join(tmp, '500x399-blurred-full.png')
-    const input = join(__dirname, 'fixtures', '500x399.jpeg')
-    const readStream = fs.createReadStream(input)
-    const writeStream = fs.createWriteStream(out)
-
-    readStream.pipe(blur).pipe(writeStream)
-
-    function getImageSize(img, cb) {
-      return gm(img).size(cb)
-    }
-
-    writeStream.on('close', function () {
-      getImageSize(input, function (err, size) {
-        if (err) return done(err)
-        assert.strictEqual(500, size.width)
-        assert.strictEqual(399, size.height)
-        done()
-      })
-    })
-  })
-
-  it('should blur the whole image', function (done) {
+  it('should default to blur the whole image', function (done) {
     this.timeout(5000)
     const blur = new BlurStream({ method: 'gaussian' })
     const out = join(tmp, '500x399-gauss-blurred-full.png')
@@ -95,67 +72,6 @@ describe('BlurStream', function () {
     blur.on('error', function (err) {
       assert(err, 'Did Error')
       done()
-    })
-  })
-
-  it('should pixellate a 100x100 square', function (done) {
-    const blur = new BlurStream({
-      masks: [
-        [
-          [0, 0],
-          [0, 100],
-          [100, 100],
-          [100, 0]
-        ]
-      ]
-    })
-    const input = join(__dirname, 'fixtures', '500x399.jpeg')
-
-    const out = join(tmp, '500x399-pixel-portion.png')
-    const expectedOutput = join(
-      __dirname,
-      'fixtures',
-      '500x399-pixel-portion.png'
-    )
-
-    const readStream = fs.createReadStream(input)
-    const writeStream = fs.createWriteStream(out)
-
-    readStream.pipe(blur).pipe(writeStream)
-
-    function getImageSize(img, cb) {
-      return gm(img).size(cb)
-    }
-
-    writeStream.on('close', function () {
-      getImageSize(input, function (err, size) {
-        if (err) return done(err)
-        assert.strictEqual(size.width, 500)
-        assert.strictEqual(size.height, 399)
-
-        const options = {
-          file: join(tmp, '500x399-pixel-portion-diff.png'),
-          tolerance: 0.001,
-          highlightColor: 'yellow'
-        }
-
-        gm.compare(
-          out,
-          expectedOutput,
-          options,
-          function (err, isEqual, equality, raw) {
-            assert.strictEqual(
-              isEqual,
-              true,
-              'Images do not match see ‘' +
-                options.file +
-                '’ for a diff.\n' +
-                raw
-            )
-            done()
-          }
-        )
-      })
     })
   })
 
@@ -222,7 +138,7 @@ describe('BlurStream', function () {
     })
   })
 
-  it('should pixellate a 100x100 square and a triangle', function (done) {
+  it('should blur a 100x100 square and a triangle', function (done) {
     const blur = new BlurStream({
       masks: [
         [
@@ -241,11 +157,11 @@ describe('BlurStream', function () {
     })
     const input = join(__dirname, 'fixtures', '500x399.jpeg')
 
-    const out = join(tmp, '500x399-pixel-multi-portion.png')
+    const out = join(tmp, '500x399-multi-portion.png')
     const expectedOutput = join(
       __dirname,
       'fixtures',
-      '500x399-pixel-multi-portion.png'
+      '500x399-multi-portion.png'
     )
 
     const readStream = fs.createReadStream(input)
@@ -289,7 +205,7 @@ describe('BlurStream', function () {
     })
   })
 
-  it('should pixellate a square and a triangle on a large image', function (done) {
+  it('should blur a square and a triangle on a large image', function (done) {
     const blur = new BlurStream({
       masks: [
         [
@@ -309,13 +225,12 @@ describe('BlurStream', function () {
 
     const input = join(__dirname, 'fixtures', 'massive-image.jpg')
 
-    const out = join(tmp, 'massive-image-output.png')
+    const out = join(tmp, 'massive-image-output.jpg')
     const expectedOutput = join(
       __dirname,
       'fixtures',
-      'massive-image-output.png'
+      'massive-image-output.jpg'
     )
-
     const readStream = fs.createReadStream(input)
     const writeStream = fs.createWriteStream(out)
 
@@ -334,7 +249,7 @@ describe('BlurStream', function () {
         assert.strictEqual(size.height, 2016)
 
         const options = {
-          file: join(tmp, '500x399-pixel-multi-portion-diff.png'),
+          file: join(tmp, 'massive-image-output-diff.png'),
           tolerance: 0.001,
           highlightColor: 'yellow'
         }
@@ -352,6 +267,7 @@ describe('BlurStream', function () {
                 '’ for a diff.\n' +
                 raw
             )
+
             done()
           }
         )
