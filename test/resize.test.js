@@ -511,6 +511,51 @@ describe('ResizeStream', function () {
             .pipe(writeStream, { width: 100, mode: 'stretch' })
         }.should.throw('Unable to stretch to a single dimension constant'))
       })
+
+      it('should set gravity of image', function (done) {
+        resize.chunks.should.have.lengthOf(0)
+        const input = join(__dirname, 'fixtures', 'test-pattern.' + format)
+        const out = join(tmp, 'gravity-south.' + format)
+        const readStream = fs.createReadStream(input)
+        const writeStream = fs.createWriteStream(out)
+        const expectedOut = join(
+          __dirname,
+          'fixtures',
+          'gravity-south.' + format
+        )
+
+        readStream.pipe(resize).pipe(writeStream, {
+          width: 300,
+          height: 90,
+          mode: 'cover',
+          gravity: 'South'
+        })
+
+        writeStream.on('close', function () {
+          const options = {
+            file: join(tmp, 'gravity-south-diff.' + format),
+            tolerance: 0.001,
+            highlightColor: 'yellow'
+          }
+
+          gm.compare(
+            out,
+            expectedOut,
+            options,
+            function (err, isEqual, equality, raw) {
+              assert.strictEqual(
+                isEqual,
+                true,
+                'Images do not match see ‘' +
+                  options.file +
+                  '’ for a diff.\n' +
+                  raw
+              )
+              done()
+            }
+          )
+        })
+      })
     })
   })
 
