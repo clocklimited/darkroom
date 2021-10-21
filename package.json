@@ -1,6 +1,6 @@
 {
   "name": "@clocklimited/darkroom",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "Darkroom API for image manipulation",
   "main": "darkroom.js",
   "engines": {
