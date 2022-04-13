@@ -7,7 +7,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^3.2.2",
     "file-type": "^10.7.0",
     "gm": "^1.23.1",
     "rimraf": "^2.5.2",
