@@ -3,13 +3,13 @@ const CropStream = require('../lib/crop')
 const DarkroomStream = require('../lib/darkroom-stream')
 const { join } = require('path')
 const temp = require('temp')
-const rimraf = require('rimraf')
+// const rimraf = require('rimraf')
 const fs = require('fs')
 const gm = require('gm')
 const async = require('async')
 let tmp
 
-describe('CropStream', function () {
+describe.only('CropStream', function () {
   before(function (done) {
     temp.mkdir('crop-test', function (err, path) {
       if (err) return done(err)
@@ -21,7 +21,7 @@ describe('CropStream', function () {
   after(function () {
     // If you need to see some of the image diffs from failing test comment
     // out this line.
-    rimraf.sync(tmp)
+    // rimraf.sync(tmp)
   })
 
   it('should be a DarkroomStream', function () {
