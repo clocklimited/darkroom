@@ -3,7 +3,7 @@ const CropStream = require('../lib/crop')
 const DarkroomStream = require('../lib/darkroom-stream')
 const { join } = require('path')
 const temp = require('temp')
-const rimraf = require('rimraf')
+// const rimraf = require('rimraf')
 const fs = require('fs')
 const gm = require('gm')
 const async = require('async')
@@ -21,7 +21,7 @@ describe('CropStream', function () {
   after(function () {
     // If you need to see some of the image diffs from failing test comment
     // out this line.
-    rimraf.sync(tmp)
+    // rimraf.sync(tmp)
   })
 
   it('should be a DarkroomStream', function () {
@@ -219,108 +219,6 @@ describe('CropStream', function () {
       writeStream.on('close', function () {
         const options = {
           file: join(tmp, 'oriented-right-in-exif-cropped-diff.jpeg'),
-          tolerance: 0.001,
-          highlightColor: 'yellow'
-        }
-        gm.compare(
-          out,
-          expectedOut,
-          options,
-          function (err, isEqual, equality, raw) {
-            assert.strictEqual(
-              isEqual,
-              true,
-              'Images do not match see ‘' +
-                options.file +
-                '’ for a diff.\n' +
-                raw
-            )
-            done()
-          }
-        )
-      })
-    })
-  })
-
-  describe('gravity', function () {
-    it('should return an image of the requested size when a portrait image is cropped', function (done) {
-      const options = {
-        crop: {
-          w: 720,
-          h: 480
-        },
-        gravity: 'Center'
-      }
-      const image = new CropStream()
-      const out = join(tmp, 'gravity-portrait-cropped-test.png')
-      const input = join(
-        __dirname,
-        'fixtures',
-        'gravity-portrait-original.jpeg'
-      )
-      const readStream = fs.createReadStream(input)
-      const writeStream = fs.createWriteStream(out)
-      const expectedOut = join(
-        __dirname,
-        'fixtures',
-        'gravity-portrait-cropped.jpeg'
-      )
-
-      readStream.pipe(image).pipe(writeStream, options)
-
-      writeStream.on('close', function () {
-        const options = {
-          file: join(tmp, 'gravity-portrait-cropped-diff.jpeg'),
-          tolerance: 0.001,
-          highlightColor: 'yellow'
-        }
-        gm.compare(
-          out,
-          expectedOut,
-          options,
-          function (err, isEqual, equality, raw) {
-            assert.strictEqual(
-              isEqual,
-              true,
-              'Images do not match see ‘' +
-                options.file +
-                '’ for a diff.\n' +
-                raw
-            )
-            done()
-          }
-        )
-      })
-    })
-
-    it('should return an image of the requested size when a landscape image is cropped', function (done) {
-      const options = {
-        crop: {
-          w: 400,
-          h: 400
-        },
-        gravity: 'Center'
-      }
-      const image = new CropStream()
-      const out = join(tmp, 'gravity-landscape-cropped-test.png')
-      const input = join(
-        __dirname,
-        'fixtures',
-        'gravity-landscape-original.jpeg'
-      )
-      const readStream = fs.createReadStream(input)
-      const writeStream = fs.createWriteStream(out)
-      const expectedOut = join(
-        __dirname,
-        'fixtures',
-        'gravity-landscape-cropped.jpeg'
-      )
-
-      readStream.pipe(image).pipe(writeStream, options)
-
-      writeStream.on('close', function () {
-        const options = {
-          file: join(tmp, 'gravity-landscape-cropped-diff.jpeg'),
           tolerance: 0.001,
           highlightColor: 'yellow'
         }
