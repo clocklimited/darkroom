@@ -439,4 +439,78 @@ describe('CropStream', function () {
       })
     })
   })
+
+  describe('jpeg', function () {
+    it('should set quality', function (done) {
+      const options = {
+        crop: {
+          w: 89.9,
+          h: 79.9,
+          x1: 99.9,
+          y1: 29.9
+        },
+        quality: 60
+      }
+      const image = new CropStream()
+      const input = join(__dirname, 'fixtures', 'test-pattern.png')
+      const out = join(tmp, 'test-quality-60.jpeg')
+      const readStream = fs.createReadStream(input)
+      const writeStream = fs.createWriteStream(out)
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        gm(out).identify(function (err, data) {
+          data['JPEG-Quality'].should.equal('60')
+          done(err)
+        })
+      })
+    })
+
+    it('should accept quality as a number', function (done) {
+      const options = {
+        crop: {
+          w: 89.9,
+          h: 79.9,
+          x1: 99.9,
+          y1: 29.9
+        },
+        quality: 60
+      }
+      const image = new CropStream()
+      const input = join(__dirname, 'fixtures', 'test-pattern.png')
+      const out = join(tmp, 'test-quality-60.jpeg')
+      const readStream = fs.createReadStream(input)
+      const writeStream = fs.createWriteStream(out)
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        done()
+      })
+    })
+
+    it('should accept quality as a string', function (done) {
+      const options = {
+        crop: {
+          w: 89.9,
+          h: 79.9,
+          x1: 99.9,
+          y1: 29.9
+        },
+        quality: '60'
+      }
+      const image = new CropStream()
+      const input = join(__dirname, 'fixtures', 'test-pattern.png')
+      const out = join(tmp, 'test-quality-60.jpeg')
+      const readStream = fs.createReadStream(input)
+      const writeStream = fs.createWriteStream(out)
+
+      readStream.pipe(image).pipe(writeStream, options)
+
+      writeStream.on('close', function () {
+        done()
+      })
+    })
+  })
 })

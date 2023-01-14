@@ -53,6 +53,57 @@ describe('ResizeStream', function () {
   const formats = ['png', 'jpeg', 'gif']
   formats.forEach(function (format) {
     describe('shared resize tests: ' + format, function () {
+      it('should produce image at specified quality', function (done) {
+        if (format !== 'jpeg') return done()
+        resize.chunks.should.have.lengthOf(0)
+        const filePath = join(tmp, 'small-stretch.' + format)
+        const readStream = fs.createReadStream(
+          join(__dirname, 'fixtures', '500x399-24bit.' + format)
+        )
+        const writeStream = fs.createWriteStream(filePath)
+
+        readStream.pipe(resize).pipe(writeStream, { quality: 60 })
+
+        writeStream.on('close', function () {
+          gm(filePath).identify(function (err, data) {
+            data['JPEG-Quality'].should.equal('60')
+            done(err)
+          })
+        })
+      })
+
+      it('should accept quality as a number', function (done) {
+        if (format !== 'jpeg') return done()
+        resize.chunks.should.have.lengthOf(0)
+        const filePath = join(tmp, 'small-stretch.' + format)
+        const readStream = fs.createReadStream(
+          join(__dirname, 'fixtures', '500x399-24bit.' + format)
+        )
+        const writeStream = fs.createWriteStream(filePath)
+
+        readStream.pipe(resize).pipe(writeStream, { quality: '60' })
+
+        writeStream.on('close', function () {
+          done()
+        })
+      })
+
+      it('should accept quality as a string', function (done) {
+        if (format !== 'jpeg') return done()
+        resize.chunks.should.have.lengthOf(0)
+        const filePath = join(tmp, 'small-stretch.' + format)
+        const readStream = fs.createReadStream(
+          join(__dirname, 'fixtures', '500x399-24bit.' + format)
+        )
+        const writeStream = fs.createWriteStream(filePath)
+
+        readStream.pipe(resize).pipe(writeStream, { quality: '60' })
+
+        writeStream.on('close', function () {
+          done()
+        })
+      })
+
       it('should return an image with a known length', function (done) {
         resize.chunks.should.have.lengthOf(0)
         const filePath = join(tmp, 'small-stretch.' + format)
